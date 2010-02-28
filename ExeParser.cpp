@@ -26,7 +26,7 @@ void ExeParser::parse(char * path, std::ios::pos_type & contentStart, std::ios::
     handle.read(guidBuffer, sizeof(guid));
 
     // check the guid
-    if (memcmp(guidBuffer, guid, (size_t)sizeof(guid)) != 0) {
+    if (memcmp(guidBuffer, guid, sizeof(guid)) != 0) {
         // guid doesn't match. no content.
         contentStart = 0;
         contentEnd = 0;
@@ -41,3 +41,4 @@ void ExeParser::parse(char * path, std::ios::pos_type & contentStart, std::ios::
     contentEnd = (std::ios::pos_type)((std::ios::off_type)fileSize - (std::ios::off_type)footerSize);
     contentStart = (std::ios::pos_type)((std::ios::off_type)contentEnd - (std::ios::off_type)contentSize);
 }
+

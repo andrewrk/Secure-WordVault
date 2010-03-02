@@ -3,15 +3,21 @@
 
 #include "ExeParser.h"
 
-char * getTheRealPath(int argc, char *argv[]);
-void copySelf(char * selfPath);
+#include <QProcess>
+#include <QDir>
+
+QString getTheRealPath(int argc, char *argv[]);
+QString copySelf(QString selfPath);
+void beExecutingThisOtherFile(QString exePath, QString theRealPath);
 
 int main(int argc, char *argv[])
 {
-    char * theRealPath = getTheRealPath(argc, argv);
+    QString theRealPath = getTheRealPath(argc, argv);
     if (theRealPath == NULL) {
         // this is the user double clicking the file.
-        copySelf(argv[0]);
+        QString selfPath = argv[0];
+        QString tmpExePath = copySelf(selfPath);
+        beExecutingThisOtherFile(tmpExePath, selfPath);
         return 0;
     } else {
         // this is the tmp file running.
@@ -23,17 +29,44 @@ int main(int argc, char *argv[])
     }
 }
 
-char * getTheRealPath(int argc, char *argv[]) {
+QString getTheRealPath(int argc, char *argv[]) {
     if (argc < 3)
         return NULL;
-    char * dashDashTheRealPath = argv[1];
-    if (strcmp(dashDashTheRealPath, "--theRealPath") != 0)
+    QString dashDashTheRealPath = argv[1];
+    if (dashDashTheRealPath != "--theRealPath")
         return NULL;
     return argv[2];
 }
 
-void copySelf(char * selfPath) {
-    std::ios::pos_type asf, asfs;
-    ExeParser::parse(selfPath, asf, asfs);
-    // TODO
+QString copySelf(QString selfPath) {
+    // read self
+    QFile selfFile(selfPath);
+    selfFile.open(QIODevice::ReadOnly);
+    qint64 contentStart, contentEnd;
+    ExeParser::parse(selfFile, contentStart, contentEnd);
+
+    // open tmp file
+    QDir tmpDir = QDir::temp();
+    QString tmpExePath = tmpDir.absoluteFilePath("Secure WordVault.exe");
+    QFile tmpExeFile(tmpExePath);
+    tmpExeFile.open(QIODevice::WriteOnly);
+
+    // copy exe code to tmp file
+    selfFile.seek(0);
+    char * exeData = new char[contentStart];
+    selfFile.read(exeData, contentStart);
+    tmpExeFile.write(exeData, contentStart);
+
+    // close
+    selfFile.close();
+    tmpExeFile.close();
+
+    return tmpExePath;
+}
+
+void beExecutingThisOtherFile(QString exePath, QString theRealPath) {
+    QStringList args;
+    args.append("--theRealFile");
+    args.append(theRealPath);
+    QProcess::startDetached(exePath, args);
 }

@@ -1,11 +1,11 @@
 #ifndef EXEPARSER_H
 #define EXEPARSER_H
 
-#include <fstream>
+#include <QFile>
 
 namespace ExeParser
 {
-    void parse(char * path, std::ios::pos_type & contentStart, std::ios::pos_type & contentEnd);
+    void parse(QFile & openFile, qint64 & contentStart, qint64 & contentEnd);
 };
 
 #endif

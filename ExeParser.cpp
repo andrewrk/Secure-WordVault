@@ -6,24 +6,19 @@ const unsigned char guid[] = {0x7c, 0x7a, 0x64, 0x0e, 0x9b, 0x4f, 0x42, 0x58, 0x
 // TODO proper assertion failure
 void omgWtf() { throw 1; }
 
-void ExeParser::parse(char * path, std::ios::pos_type & contentStart, std::ios::pos_type & contentEnd) {
-    // the "ate" flag puts the cursor at the end of the file, which is apparently the proper way to get the size of a file.
-    std::ifstream handle(path, std::ios::in | std::ios::binary | std::ios::ate);
-    if (!handle.is_open())
-        omgWtf();
-
-    // get the size
-    std::ios::pos_type fileSize = handle.tellg();
-    int footerSize = sizeof(guid) + sizeof(int);
+void ExeParser::parse(QFile & openFile, qint64 & contentStart, qint64 & contentEnd) {
+    // check the size
+    qint64 fileSize = openFile.size();
+    qint64 footerSize = sizeof(guid) + sizeof(qint64);
     if (fileSize < footerSize)
         omgWtf(); // file is too small
 
     // read the footer
-    handle.seekg((std::ios::off_type)-footerSize, std::ios::end);
-    int contentSize;
-    handle.read((char *)&contentSize, sizeof(int));
-    char guidBuffer[sizeof(guid)];
-    handle.read(guidBuffer, sizeof(guid));
+    openFile.seek(fileSize - footerSize);
+    qint64 contentSize;
+    openFile.read((char *)&contentSize, sizeof(qint64));
+    unsigned char guidBuffer[sizeof(guid)];
+    openFile.read((char *)guidBuffer, sizeof(guid));
 
     // check the guid
     if (memcmp(guidBuffer, guid, sizeof(guid)) != 0) {
@@ -37,8 +32,8 @@ void ExeParser::parse(char * path, std::ios::pos_type & contentStart, std::ios::
     if (fileSize < contentSize + footerSize)
         omgWtf(); // contentSize is too big
 
-    // HOLY TYPE CASTING BATMAN!!!
-    contentEnd = (std::ios::pos_type)((std::ios::off_type)fileSize - (std::ios::off_type)footerSize);
-    contentStart = (std::ios::pos_type)((std::ios::off_type)contentEnd - (std::ios::off_type)contentSize);
+    // output
+    contentEnd = fileSize - footerSize;
+    contentStart = contentEnd - contentSize;
 }
 

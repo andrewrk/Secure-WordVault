@@ -23,8 +23,8 @@ void ExeParser::parse(QFile & openFile, qint64 & contentStart, qint64 & contentE
     // check the guid
     if (memcmp(guidBuffer, guid, sizeof(guid)) != 0) {
         // guid doesn't match. no content.
-        contentStart = 0;
-        contentEnd = 0;
+        contentStart = fileSize;
+        contentEnd = fileSize;
         return;
     }
 

@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
+
+    m_ui->statusBar->showMessage(tr("???"));
 }
 
 MainWindow::~MainWindow()
@@ -26,4 +28,24 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void MainWindow::on_txtDocument_undoAvailable(bool b)
+{
+    m_ui->actionUndo->setEnabled(b);
+}
+
+void MainWindow::on_txtDocument_redoAvailable(bool b)
+{
+    m_ui->actionRedo->setEnabled(b);
+}
+
+void MainWindow::on_actionUndo_triggered()
+{
+    m_ui->txtDocument->undo();
+}
+
+void MainWindow::on_actionRedo_triggered()
+{
+    m_ui->txtDocument->redo();
 }

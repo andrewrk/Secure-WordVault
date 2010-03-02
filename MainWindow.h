@@ -18,6 +18,12 @@ protected:
 
 private:
     Ui::MainWindow *m_ui;
+
+private slots:
+    void on_actionRedo_triggered();
+    void on_actionUndo_triggered();
+    void on_txtDocument_redoAvailable(bool b);
+    void on_txtDocument_undoAvailable(bool b);
 };
 
 #endif // MAINWINDOW_H

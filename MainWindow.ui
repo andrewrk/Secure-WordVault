@@ -30,12 +30,7 @@
      </font>
     </property>
     <property name="plainText">
-     <string>aoeuaoeu
-aoeuaoeu
-aoeu
-aou
-ao
-</string>
+     <string/>
     </property>
    </widget>
   </widget>
@@ -45,7 +40,7 @@ ao
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -77,8 +72,6 @@ ao
     <addaction name="actionFind"/>
     <addaction name="actionFindNext"/>
     <addaction name="actionReplace"/>
-    <addaction name="separator"/>
-    <addaction name="action_GoToLine"/>
     <addaction name="separator"/>
     <addaction name="actionInsertDateTime"/>
    </widget>
@@ -137,22 +130,12 @@ ao
     <string>Save the current document somewhere else</string>
    </property>
   </action>
-  <action name="action">
-   <property name="text">
-    <string>-</string>
-   </property>
-  </action>
   <action name="actionChangePassword">
    <property name="text">
     <string>&amp;Change Password...</string>
    </property>
    <property name="toolTip">
     <string>Change your current password</string>
-   </property>
-  </action>
-  <action name="action_2">
-   <property name="text">
-    <string>-</string>
    </property>
   </action>
   <action name="actionExit">
@@ -182,12 +165,7 @@ ao
     <string>Redo the last action</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+Z</string>
-   </property>
-  </action>
-  <action name="action_3">
-   <property name="text">
-    <string>-</string>
+    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="actionCut">
@@ -231,11 +209,6 @@ ao
     <string>Del</string>
    </property>
   </action>
-  <action name="action_4">
-   <property name="text">
-    <string>-</string>
-   </property>
-  </action>
   <action name="actionSelectAll">
    <property name="text">
     <string>Select &amp;All</string>
@@ -245,11 +218,6 @@ ao
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
-   </property>
-  </action>
-  <action name="action_5">
-   <property name="text">
-    <string>-</string>
    </property>
   </action>
   <action name="actionFind">
@@ -283,27 +251,6 @@ ao
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
-   </property>
-  </action>
-  <action name="action_6">
-   <property name="text">
-    <string>-</string>
-   </property>
-  </action>
-  <action name="action_GoToLine">
-   <property name="text">
-    <string>&amp;Go to Line...</string>
-   </property>
-   <property name="toolTip">
-    <string>Go to a specific line number of the document</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+G</string>
-   </property>
-  </action>
-  <action name="action_7">
-   <property name="text">
-    <string>-</string>
    </property>
   </action>
   <action name="actionInsertDateTime">

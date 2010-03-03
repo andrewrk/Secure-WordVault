@@ -19,15 +19,18 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
 
-    m_ui->statusBar->showMessage(tr("???"));
-
-
-    updateCaption();
+    updateGui();
 }
 
 MainWindow::~MainWindow()
 {
     delete m_ui;
+}
+
+void MainWindow::updateGui()
+{
+    m_ui->statusBar->setVisible(m_ui->actionStatusBar->isChecked());
+    updateCaption();
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -101,7 +104,6 @@ bool MainWindow::guiSave()
 
     if (m_targetExe.isNull())
         return guiSaveAs(); // need to pick a file
-
 
     save();
     return true;
@@ -184,4 +186,9 @@ void MainWindow::on_actionNew_triggered()
     m_ui->txtDocument->setPlainText("");
     m_tainted = false;
     updateCaption();
+}
+
+void MainWindow::on_actionStatusBar_toggled(bool)
+{
+    updateGui();
 }

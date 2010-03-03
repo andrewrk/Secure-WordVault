@@ -47,6 +47,9 @@ private: //methods
     // make sure the title bar always displays the correct thing
     void updateCaption();
 
+    // make sure the correct buttons and things are shown and enabled
+    void updateGui();
+
     // if we don't have a password, prompt the user for one.
     // returns true if they didn't cancel
     bool ensurePassword();
@@ -56,6 +59,7 @@ private: //methods
 
 
 private slots:
+    void on_actionStatusBar_toggled(bool );
     void on_actionNew_triggered();
     void on_actionSaveAs_triggered();
     void on_actionSave_triggered();

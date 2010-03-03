@@ -4,6 +4,8 @@
 #include "NewPasswordDialog.h"
 #include "AboutDialog.h"
 #include "ChangePasswordDialog.h"
+#include "ExeParser.h"
+#include "PasswordInputDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -32,24 +34,25 @@ MainWindow::~MainWindow()
 
 bool MainWindow::guiOpen(QString targetExe)
 {
-    // TODO: something like
-//    QByteArray doc = exeParser.getEncryptedDocument(targetExe);
-//    if (doc.size() == 0) {
-//        // new document
-//        m_ui->txtDocument->setPlainText("");
-//    } else {
-//        // prompt for password and decrypt
-//        while(true) {
-//            PasswordPrompt dialog(this);
-//            if (dialog.exec() == QDialog::Rejected)
-//                return false; // user cancel
-//            QString password = dialog.password();
-//            DecryptObject obj = decrypted(doc, password);
-//            if (obj.success())
-//                break;
-//        }
-//        m_password = password;
-//    }
+    QByteArray doc = ExeParser::read(targetExe);
+    if (doc.size() == 0) {
+        // new document
+        m_ui->txtDocument->setPlainText("");
+    } else {
+        // prompt for password and decrypt
+        while(true) {
+            PasswordInputDialog dialog(this);
+            if (dialog.exec() == QDialog::Rejected)
+                return false; // user cancel
+            QString password = dialog.password();
+            // TODO: something like
+            // DecryptObject obj = decrypted(doc, password);
+            // if (obj.success()) {
+            //    m_password = password;
+            //    break;
+            // }
+        }
+    }
 
     m_targetExe = targetExe;
     m_tainted = false;
@@ -145,7 +148,7 @@ bool MainWindow::guiSave()
 void MainWindow::save()
 {
     // TODO: something like
-    // exeParser.write(m_targetExe, encrypted(m_ui.txtDocument.text(), m_password));
+    // ExeParser::write(m_targetExe, encrypted(m_ui.txtDocument.text(), m_password));
 
     m_tainted = false;
     updateGui();

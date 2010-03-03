@@ -1,5 +1,5 @@
-#ifndef PASSWORDINPUTDIALOG_H
-#define PASSWORDINPUTDIALOG_H
+#ifndef NEWPASSWORDDIALOG_H
+#define NEWPASSWORDDIALOG_H
 
 #include <QDialog>
 #include <QString>
@@ -27,4 +27,4 @@ private slots:
     void on_buttonBox_accepted();
 };
 
-#endif // PASSWORDINPUTDIALOG_H
+#endif // NEWPASSWORDDIALOG_H

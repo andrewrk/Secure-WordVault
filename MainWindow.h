@@ -59,6 +59,11 @@ private: //methods
 
 
 private slots:
+    void on_actionPaste_triggered();
+    void on_actionCopy_triggered();
+    void on_actionCut_triggered();
+    void on_actionDelete_triggered();
+    void on_actionSelectAll_triggered();
     void on_actionWordWrap_toggled(bool );
     void on_actionStatusBar_toggled(bool );
     void on_actionNew_triggered();

@@ -200,3 +200,28 @@ void MainWindow::on_actionWordWrap_toggled(bool )
 {
     updateGui();
 }
+
+void MainWindow::on_actionSelectAll_triggered()
+{
+    m_ui->txtDocument->selectAll();
+}
+
+void MainWindow::on_actionDelete_triggered()
+{
+    m_ui->txtDocument->textCursor().deleteChar();
+}
+
+void MainWindow::on_actionCut_triggered()
+{
+    m_ui->txtDocument->cut();
+}
+
+void MainWindow::on_actionCopy_triggered()
+{
+    m_ui->txtDocument->copy();
+}
+
+void MainWindow::on_actionPaste_triggered()
+{
+    m_ui->txtDocument->paste();
+}

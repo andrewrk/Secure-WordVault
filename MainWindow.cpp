@@ -49,6 +49,7 @@ bool MainWindow::guiOpen(QString targetExe)
             // DecryptObject obj = decrypted(doc, password);
             // if (obj.success()) {
             //    m_password = password;
+            //    m_ui.txtDocument.setText(obj.text());
             //    break;
             // }
         }

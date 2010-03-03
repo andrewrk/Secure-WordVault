@@ -8,3 +8,5 @@ Makefile
 Makefile.Debug
 Makefile.Release
 securenotepad
+object_script.securenotepad.Release
+object_script.securenotepad.Debug

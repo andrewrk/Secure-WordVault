@@ -41,6 +41,7 @@ void ChangePasswordDialog::on_buttonBox_accepted()
         return;
     }
 
+    // make sure confirm password is same
     if (m_ui->txtNewPassword->text() != m_ui->txtConfirmNewPassword->text()) {
         QMessageBox::warning(this, QApplication::applicationName(),
             tr("Passwords do not match."),

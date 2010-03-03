@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include "PasswordInputDialog.h"
+#include "NewPasswordDialog.h"
 #include "AboutDialog.h"
 #include "ChangePasswordDialog.h"
 
@@ -155,11 +155,13 @@ bool MainWindow::ensurePassword()
 {
     if (m_password.isNull()) {
         // prompt for a new password
-        PasswordInputDialog dialog(this);
-        if (dialog.exec() == QDialog::Accepted)
+        NewPasswordDialog dialog(this);
+        if (dialog.exec() == QDialog::Accepted) {
             m_password = dialog.password();
-        else
+            m_tainted = true;
+        } else {
             return false; // cancelled save
+        }
     }
 
     return true;

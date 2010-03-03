@@ -2,24 +2,25 @@
 #define PASSWORDINPUTDIALOG_H
 
 #include <QDialog>
+#include <QString>
 
 namespace Ui {
-    class PasswordInputDialog;
+    class NewPasswordDialog;
 }
 
-class PasswordInputDialog : public QDialog {
+class NewPasswordDialog : public QDialog {
     Q_OBJECT
 public:
-    PasswordInputDialog(QWidget *parent = 0);
-    ~PasswordInputDialog();
+    NewPasswordDialog(QWidget *parent = 0);
+    ~NewPasswordDialog();
 
+    // get the password that was selected
     QString password();
-
 protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::PasswordInputDialog *m_ui;
+    Ui::NewPasswordDialog *m_ui;
 
 private slots:
     void on_buttonBox_rejected();

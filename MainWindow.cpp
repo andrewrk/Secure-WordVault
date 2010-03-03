@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 
 #include "PasswordInputDialog.h"
+#include "AboutDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -230,4 +231,9 @@ void MainWindow::on_actionPaste_triggered()
 void MainWindow::on_actionInsertDateTime_triggered()
 {
     m_ui->txtDocument->textCursor().insertText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutDialog(this).exec();
 }

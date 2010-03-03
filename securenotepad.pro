@@ -5,8 +5,11 @@ TARGET = securenotepad
 TEMPLATE = app
 SOURCES += main.cpp \
     MainWindow.cpp \
-    PasswordInputDialog.cpp
+    PasswordInputDialog.cpp \
+    AboutDialog.cpp
 HEADERS += MainWindow.h \
-    PasswordInputDialog.h
+    PasswordInputDialog.h \
+    AboutDialog.h
 FORMS += MainWindow.ui \
-    PasswordInputDialog.ui
+    PasswordInputDialog.ui \
+    AboutDialog.ui

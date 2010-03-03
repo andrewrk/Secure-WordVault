@@ -59,6 +59,7 @@ private: //methods
 
 
 private slots:
+    void on_actionAbout_triggered();
     void on_actionInsertDateTime_triggered();
     void on_actionPaste_triggered();
     void on_actionCopy_triggered();

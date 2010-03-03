@@ -59,6 +59,7 @@ private: //methods
 
 
 private slots:
+    void on_actionWordWrap_toggled(bool );
     void on_actionStatusBar_toggled(bool );
     void on_actionNew_triggered();
     void on_actionSaveAs_triggered();

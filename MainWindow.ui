@@ -77,7 +77,7 @@
    </widget>
    <widget class="QMenu" name="menu_Format">
     <property name="title">
-     <string>&amp;Format</string>
+     <string>F&amp;ormat</string>
     </property>
     <addaction name="actionWordWrap"/>
    </widget>

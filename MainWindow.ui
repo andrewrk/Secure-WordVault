@@ -81,12 +81,6 @@
     </property>
     <addaction name="actionWordWrap"/>
    </widget>
-   <widget class="QMenu" name="menu_View">
-    <property name="title">
-     <string>&amp;View</string>
-    </property>
-    <addaction name="actionStatusBar"/>
-   </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
@@ -96,10 +90,8 @@
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Format"/>
-   <addaction name="menu_View"/>
    <addaction name="menu_Help"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew">
    <property name="text">
     <string>&amp;New</string>
@@ -273,17 +265,6 @@
    </property>
    <property name="toolTip">
     <string>Toggle whether long lines are wrapped</string>
-   </property>
-  </action>
-  <action name="actionStatusBar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Status Bar</string>
-   </property>
-   <property name="toolTip">
-    <string>Toggle the status bar</string>
    </property>
   </action>
   <action name="actionAbout">

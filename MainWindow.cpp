@@ -31,7 +31,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateGui()
 {
-    m_ui->statusBar->setVisible(m_ui->actionStatusBar->isChecked());
     m_ui->txtDocument->setLineWrapMode(m_ui->actionWordWrap->isChecked() ?
                                        QPlainTextEdit::WidgetWidth :
                                        QPlainTextEdit::NoWrap);
@@ -191,11 +190,6 @@ void MainWindow::on_actionNew_triggered()
     m_ui->txtDocument->setPlainText("");
     m_tainted = false;
     updateCaption();
-}
-
-void MainWindow::on_actionStatusBar_toggled(bool)
-{
-    updateGui();
 }
 
 void MainWindow::on_actionWordWrap_toggled(bool )

@@ -1,17 +1,15 @@
 #include "ExeParser.h"
 
+#include <cassert>
+
 // generated from http://www.guidgenerator.com/online-guid-generator.aspx
 const unsigned char guid[] = {0x7c, 0x7a, 0x64, 0x0e, 0x9b, 0x4f, 0x42, 0x58, 0xa8, 0xb4, 0xd8, 0x4b, 0xd5, 0x8a, 0x05, 0x14};
-
-// TODO proper assertion failure
-void omgWtf() { throw 1; }
 
 void ExeParser::parse(QFile & openFile, qint64 & contentStart, qint64 & contentEnd) {
     // check the size
     qint64 fileSize = openFile.size();
     qint64 footerSize = sizeof(guid) + sizeof(qint64);
-    if (fileSize < footerSize)
-        omgWtf(); // file is too small
+    assert(fileSize >= footerSize);
 
     // read the footer
     openFile.seek(fileSize - footerSize);
@@ -29,11 +27,56 @@ void ExeParser::parse(QFile & openFile, qint64 & contentStart, qint64 & contentE
     }
 
     // check the size (make sure it's in the file)
-    if (fileSize < contentSize + footerSize)
-        omgWtf(); // contentSize is too big
+    assert(fileSize >= contentSize + footerSize);
 
     // output
     contentEnd = fileSize - footerSize;
     contentStart = contentEnd - contentSize;
 }
 
+void ExeParser::copyOnlyExe(QString exeFileSource, QString exeFileDest)
+{
+    // read source
+    QFile in(exeFileSource);
+    in.open(QIODevice::ReadOnly);
+    qint64 contentStart, contentEnd;
+    parse(in, contentStart, contentEnd);
+
+    // open out file
+    QFile out(exeFileDest);
+    out.open(QIODevice::WriteOnly);
+
+    // copy exe code to out file
+    in.seek(0);
+    out.write(in.read(contentStart));
+
+    // close
+    in.close();
+    out.close();
+}
+
+QByteArray ExeParser::read(QString exeFile)
+{
+    QFile in(exeFile);
+    in.open(QIODevice::ReadOnly);
+    qint64 contentStart, contentEnd;
+    parse(in, contentStart, contentEnd);
+
+    in.seek(contentStart);
+    QByteArray doc = in.read(contentEnd - contentStart);
+    in.close();
+    return doc;
+}
+
+void ExeParser::write(QString exeFile, QByteArray document)
+{
+    QFile out(exeFile);
+    out.open(QIODevice::ReadWrite);
+    qint64 contentStart, contentEnd;
+    parse(out, contentStart, contentEnd);
+
+    out.seek(contentStart);
+    out.write(document);
+    out.close();
+
+}

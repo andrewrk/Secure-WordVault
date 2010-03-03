@@ -1,4 +1,5 @@
 #include <QtGui/QApplication>
+#include <QtCore/QObject>
 #include "MainWindow.h"
 
 #include "ExeParser.h"
@@ -6,67 +7,59 @@
 #include <QProcess>
 #include <QDir>
 
-QString getTheRealPath(int argc, char *argv[]);
-QString copySelf(QString selfPath);
-void beExecutingThisOtherFile(QString exePath, QString theRealPath);
+const char * targetParameter = "--target";
+QString getTargetExe();
+QString copySelfToTemp();
 
+// run this program with --target <exe> to open the file. if this argument
+// is not present, it will copy itself minus the document to temp folder and
+// run the copy with that argument on itself
 int main(int argc, char *argv[])
 {
-    QString theRealPath = getTheRealPath(argc, argv);
-    if (theRealPath == NULL) {
+    QApplication app(argc, argv);
+
+    QCoreApplication::setOrganizationName(QObject::tr("Lao Wai Chinese"));
+    QCoreApplication::setOrganizationDomain("laowaichinese.net");
+    QCoreApplication::setApplicationName(QObject::tr("Secure WordVault"));
+
+    // determine whether to run or copy ourself to temp and run that
+    QString targetExe = getTargetExe();
+    if (targetExe.isNull()) {
         // this is the user double clicking the file.
-        QString selfPath = argv[0];
-        QString tmpExePath = copySelf(selfPath);
-        beExecutingThisOtherFile(tmpExePath, selfPath);
+        QString tmpExePath = copySelfToTemp();
+
+        QStringList args;
+        args.append(targetParameter);
+        args.append(QApplication::applicationFilePath());
+        QProcess::startDetached(tmpExePath, args);
         return 0;
     } else {
         // this is the tmp file running.
-        // TODO: use theRealPath
-        QApplication a(argc, argv);
-        MainWindow w;
+        MainWindow w(targetExe);
         w.show();
-        return a.exec();
+        return app.exec();
     }
 }
 
-QString getTheRealPath(int argc, char *argv[]) {
-    if (argc < 3)
-        return NULL;
-    QString dashDashTheRealPath = argv[1];
-    if (dashDashTheRealPath != "--theRealPath")
-        return NULL;
-    return argv[2];
+QString getTargetExe() {
+    QStringList args = QCoreApplication::arguments();
+
+    int index = args.indexOf(targetParameter);
+
+    if (index == -1 || index >= args.size())
+        return QString();
+
+    return args.at(index+1);
 }
 
-QString copySelf(QString selfPath) {
-    // read self
-    QFile selfFile(selfPath);
-    selfFile.open(QIODevice::ReadOnly);
-    qint64 contentStart, contentEnd;
-    ExeParser::parse(selfFile, contentStart, contentEnd);
+QString copySelfToTemp() {
+    QString selfPath = QApplication::applicationFilePath();
 
-    // open tmp file
-    QDir tmpDir = QDir::temp();
-    QString tmpExePath = tmpDir.absoluteFilePath("Secure WordVault.exe");
-    QFile tmpExeFile(tmpExePath);
-    tmpExeFile.open(QIODevice::WriteOnly);
+    QString tempTitle = QApplication::applicationName() + QString(".exe");
+    QString tempPath = QDir::temp().absoluteFilePath(tempTitle);
 
-    // copy exe code to tmp file
-    selfFile.seek(0);
-    char * exeData = new char[contentStart];
-    selfFile.read(exeData, contentStart);
-    tmpExeFile.write(exeData, contentStart);
+    ExeParser::copyOnlyExe(selfPath, tempPath);
 
-    // close
-    selfFile.close();
-    tmpExeFile.close();
-
-    return tmpExePath;
+    return tempPath;
 }
 
-void beExecutingThisOtherFile(QString exePath, QString theRealPath) {
-    QStringList args;
-    args.append("--theRealFile");
-    args.append(theRealPath);
-    QProcess::startDetached(exePath, args);
-}

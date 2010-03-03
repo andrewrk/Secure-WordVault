@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QDateTime>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
@@ -224,4 +225,9 @@ void MainWindow::on_actionCopy_triggered()
 void MainWindow::on_actionPaste_triggered()
 {
     m_ui->txtDocument->paste();
+}
+
+void MainWindow::on_actionInsertDateTime_triggered()
+{
+    m_ui->txtDocument->textCursor().insertText(QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss"));
 }

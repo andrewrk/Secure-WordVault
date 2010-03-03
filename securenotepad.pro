@@ -6,10 +6,13 @@ TEMPLATE = app
 SOURCES += main.cpp \
     MainWindow.cpp \
     PasswordInputDialog.cpp \
-    AboutDialog.cpp
+    AboutDialog.cpp \
+    ChangePasswordDialog.cpp
 HEADERS += MainWindow.h \
     PasswordInputDialog.h \
-    AboutDialog.h
+    AboutDialog.h \
+    ChangePasswordDialog.h
 FORMS += MainWindow.ui \
     PasswordInputDialog.ui \
-    AboutDialog.ui
+    AboutDialog.ui \
+    ChangePasswordDialog.ui

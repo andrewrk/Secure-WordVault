@@ -3,6 +3,7 @@
 
 #include "PasswordInputDialog.h"
 #include "AboutDialog.h"
+#include "ChangePasswordDialog.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -14,14 +15,14 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
     m_tainted(false),
-    m_targetExe(targetExe)
+    m_targetExe(QString())
 {
     m_ui->setupUi(this);
 
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
 
-    updateGui();
+    guiOpen(targetExe);
 }
 
 MainWindow::~MainWindow()
@@ -29,11 +30,39 @@ MainWindow::~MainWindow()
     delete m_ui;
 }
 
+bool MainWindow::guiOpen(QString targetExe)
+{
+    // TODO: something like
+//    QByteArray doc = exeParser.getEncryptedDocument(targetExe);
+//    if (doc.size() == 0) {
+//        // new document
+//        m_ui->txtDocument->setPlainText("");
+//    } else {
+//        // prompt for password and decrypt
+//        while(true) {
+//            PasswordPrompt dialog(this);
+//            if (dialog.exec() == QDialog::Rejected)
+//                return false; // user cancel
+//            QString password = dialog.password();
+//            DecryptObject obj = decrypted(doc, password);
+//            if (obj.success())
+//                break;
+//        }
+//        m_password = password;
+//    }
+
+    m_targetExe = targetExe;
+    m_tainted = false;
+    updateGui();
+    return true;
+}
+
 void MainWindow::updateGui()
 {
     m_ui->txtDocument->setLineWrapMode(m_ui->actionWordWrap->isChecked() ?
                                        QPlainTextEdit::WidgetWidth :
                                        QPlainTextEdit::NoWrap);
+    m_ui->actionChangePassword->setEnabled(! m_password.isNull());
     updateCaption();
 }
 
@@ -119,7 +148,7 @@ void MainWindow::save()
     // exeParser.write(m_targetExe, encrypted(m_ui.txtDocument.text(), m_password));
 
     m_tainted = false;
-    updateCaption();
+    updateGui();
 }
 
 bool MainWindow::ensurePassword()
@@ -189,7 +218,7 @@ void MainWindow::on_actionNew_triggered()
     m_targetExe = QString();
     m_ui->txtDocument->setPlainText("");
     m_tainted = false;
-    updateCaption();
+    updateGui();
 }
 
 void MainWindow::on_actionWordWrap_toggled(bool )
@@ -230,4 +259,13 @@ void MainWindow::on_actionInsertDateTime_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     AboutDialog(this).exec();
+}
+
+void MainWindow::on_actionChangePassword_triggered()
+{
+    ChangePasswordDialog dialog(m_password, this);
+    if (dialog.exec() == QDialog::Accepted) {
+        m_password = dialog.password();
+        guiSave();
+    }
 }

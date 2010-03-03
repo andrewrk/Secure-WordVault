@@ -44,6 +44,9 @@ private: //methods
     // returns true if they didn't cancel
     bool guiSaveAs();
 
+    // opens an executable file and set as current document
+    bool guiOpen(QString targetExe);
+
     // make sure the title bar always displays the correct thing
     void updateCaption();
 
@@ -57,8 +60,8 @@ private: //methods
     // actually does the save mechanism
     void save();
 
-
 private slots:
+    void on_actionChangePassword_triggered();
     void on_actionAbout_triggered();
     void on_actionInsertDateTime_triggered();
     void on_actionPaste_triggered();

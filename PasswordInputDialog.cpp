@@ -32,7 +32,7 @@ void PasswordInputDialog::on_buttonBox_accepted()
     // make sure the passwords match
     if (m_ui->txtPassword->text() != m_ui->txtConfirm->text()) {
         QMessageBox::warning(this, QApplication::applicationName(),
-            tr("Passwords do not match. Please retype your password."),
+            tr("Passwords do not match."),
             QMessageBox::Ok);
         // clear both boxes and set focus to first
         m_ui->txtConfirm->setText(QString());

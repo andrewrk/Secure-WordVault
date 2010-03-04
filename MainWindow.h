@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QLineEdit>
+#include <QTextDocument>
 
 namespace Ui {
     class MainWindow;
@@ -42,6 +43,9 @@ private: //variables
     // the normal background color of a QLineEdit
     QColor m_defaultBackgroundColor;
 
+    // flags to use when finding
+    int m_findFlags;
+
 private: //methods
     // prompts the user to save if necessary. Returns true if they did not
     // press Cancel
@@ -76,6 +80,9 @@ private: //methods
     // actually does the save mechanism
     void save();
 
+    // find forward or backward depending on flags
+    void findText(QTextDocument::FindFlag flags);
+
 private slots:
     void on_actionFindNext_triggered();
     void on_actionFind_triggered();
@@ -105,6 +112,10 @@ private slots:
     // respond to a change in the search text. If the current match can be
     // expanded, do it. otherwise find next.
     void updateSearch();
+
+    // set the findflags for the next find
+    void toggleWholeWordSearch(bool value);
+    void toggleCaseSensitiveSearch(bool value);
 
 };
 

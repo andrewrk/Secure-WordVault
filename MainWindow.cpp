@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QDateTime>
 #include <QLabel>
+#include <QCheckBox>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
@@ -20,22 +21,38 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_tainted(false),
     m_targetExe(QString()),
     m_txtFind(NULL),
-    m_lastSearchFound(true)
+    m_lastSearchFound(true),
+    m_findFlags((QTextDocument::FindFlag) 0)
 {
     m_ui->setupUi(this);
 
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
 
-    QLabel * findLabel = new QLabel(m_ui->statusBar);
-    findLabel->setText(tr("Find:"));
+    // set up the search status bar
+    // "Find:" label
+    QLabel * findLabel = new QLabel(tr("Find:"), m_ui->statusBar);
     m_ui->statusBar->addWidget(findLabel);
+
+    // text box
     m_txtFind = new QLineEdit(m_ui->statusBar);
     m_defaultBackgroundColor = m_txtFind->palette().color(m_txtFind->backgroundRole());
-    m_ui->statusBar->addWidget(m_txtFind);
-    m_ui->statusBar->hide();
     connect(m_txtFind, SIGNAL(returnPressed()), this, SLOT(guiFindNext()));
     connect(m_txtFind, SIGNAL(textChanged(QString)), this, SLOT(updateSearch()));
+    m_ui->statusBar->addWidget(m_txtFind);
+
+    // whole words only checkbox
+    QCheckBox * wholeWords = new QCheckBox(tr("Whole Words Only"), m_ui->statusBar);
+    connect(wholeWords, SIGNAL(toggled(bool)), this, SLOT(toggleWholeWordSearch(bool)));
+    m_ui->statusBar->addWidget(wholeWords);
+
+    // case sensitive checkbox
+    QCheckBox * caseSensitive = new QCheckBox(tr("Case Sensitive"), m_ui->statusBar);
+    connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
+    m_ui->statusBar->addWidget(caseSensitive);
+
+    // hide until we get the batman signal
+    m_ui->statusBar->hide();
 
     if (targetExe.isNull())
         guiNew();
@@ -47,6 +64,25 @@ MainWindow::~MainWindow()
 {
     delete m_txtFind;
     delete m_ui;
+}
+
+
+void MainWindow::toggleWholeWordSearch(bool value)
+{
+    if (value)
+        m_findFlags |= QTextDocument::FindWholeWords;
+    else
+        m_findFlags &= ~QTextDocument::FindWholeWords;
+    updateSearch();
+}
+
+void MainWindow::toggleCaseSensitiveSearch(bool value)
+{
+    if (value)
+        m_findFlags |= QTextDocument::FindCaseSensitively;
+    else
+        m_findFlags &= ~QTextDocument::FindCaseSensitively;
+    updateSearch();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent * e)
@@ -333,15 +369,25 @@ void MainWindow::on_actionFindNext_triggered()
 
 void MainWindow::guiFindNext()
 {
+    findText((QTextDocument::FindFlag) m_findFlags);
+}
+
+void MainWindow::findText(QTextDocument::FindFlag flags)
+{
     QTextCursor cursor = m_ui->txtDocument->textCursor();
     int pos = cursor.position();
-    bool found = m_ui->txtDocument->find(m_txtFind->text());
+    bool found = m_ui->txtDocument->find(m_txtFind->text(), flags);
     if (! found) {
         // wrap search
         cursor = m_ui->txtDocument->textCursor();
-        cursor.setPosition(0, QTextCursor::MoveAnchor);
+
+        if (flags & QTextDocument::FindBackward)
+            cursor.setPosition(m_ui->txtDocument->toPlainText().size(), QTextCursor::MoveAnchor);
+        else
+            cursor.setPosition(0, QTextCursor::MoveAnchor);
+
         m_ui->txtDocument->setTextCursor(cursor);
-        found = m_ui->txtDocument->find(m_txtFind->text());
+        found = m_ui->txtDocument->find(m_txtFind->text(), flags);
     }
 
     if (! found) {
@@ -356,25 +402,7 @@ void MainWindow::guiFindNext()
 
 void MainWindow::guiFindPrevious()
 {
-    QTextCursor cursor = m_ui->txtDocument->textCursor();
-    int pos = cursor.position();
-    bool found = m_ui->txtDocument->find(m_txtFind->text(), QTextDocument::FindBackward);
-    if (! found) {
-        // wrap search
-        cursor = m_ui->txtDocument->textCursor();
-        cursor.setPosition(m_ui->txtDocument->toPlainText().size(), QTextCursor::MoveAnchor);
-        m_ui->txtDocument->setTextCursor(cursor);
-        found = m_ui->txtDocument->find(m_txtFind->text(), QTextDocument::FindBackward);
-    }
-
-    if (! found) {
-        cursor = m_ui->txtDocument->textCursor();
-        cursor.setPosition(pos, QTextCursor::MoveAnchor);
-        m_ui->txtDocument->setTextCursor(cursor);
-    }
-
-    m_lastSearchFound = found;
-    updateGui();
+    findText((QTextDocument::FindFlag) (m_findFlags & (int)QTextDocument::FindBackward));
 }
 
 void MainWindow::updateSearch()

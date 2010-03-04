@@ -12,17 +12,30 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDateTime>
+#include <QLabel>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
     m_tainted(false),
-    m_targetExe(QString())
+    m_targetExe(QString()),
+    m_txtFind(NULL),
+    m_lastSearchFound(true)
 {
     m_ui->setupUi(this);
 
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
+
+    QLabel * findLabel = new QLabel(m_ui->statusBar);
+    findLabel->setText(tr("Find:"));
+    m_ui->statusBar->addWidget(findLabel);
+    m_txtFind = new QLineEdit(m_ui->statusBar);
+    m_defaultBackgroundColor = m_txtFind->palette().color(m_txtFind->backgroundRole());
+    m_ui->statusBar->addWidget(m_txtFind);
+    m_ui->statusBar->hide();
+    connect(m_txtFind, SIGNAL(returnPressed()), this, SLOT(guiFindNext()));
+    connect(m_txtFind, SIGNAL(textChanged(QString)), this, SLOT(updateSearch()));
 
     if (targetExe.isNull())
         guiNew();
@@ -32,7 +45,18 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete m_txtFind;
     delete m_ui;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent * e)
+{
+    if (e->key() == Qt::Key_Escape && m_ui->statusBar->isVisible()) {
+        m_ui->statusBar->hide();
+        m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+    } else if (e->key() == Qt::Key_F3 && e->modifiers() & Qt::ShiftModifier) {
+        guiFindPrevious();
+    }
 }
 
 bool MainWindow::guiOpen(QString targetExe)
@@ -70,6 +94,16 @@ void MainWindow::updateGui()
                                        QPlainTextEdit::WidgetWidth :
                                        QPlainTextEdit::NoWrap);
     m_ui->actionChangePassword->setEnabled(! m_password.isNull());
+
+    // color the search text box red if not found
+    QPalette pal = m_txtFind->palette();
+    if (m_lastSearchFound)
+        pal.setColor(m_txtFind->backgroundRole(), m_defaultBackgroundColor);
+    else
+        pal.setColor(m_txtFind->backgroundRole(), QColor(255, 102, 102));
+    m_txtFind->setPalette(pal);
+
+
     updateCaption();
 }
 
@@ -283,4 +317,73 @@ void MainWindow::on_actionChangePassword_triggered()
         m_password = dialog.password();
         guiSave();
     }
+}
+
+void MainWindow::on_actionFind_triggered()
+{
+    m_ui->statusBar->show();
+    m_txtFind->setFocus(Qt::OtherFocusReason);
+    m_txtFind->selectAll();
+}
+
+void MainWindow::on_actionFindNext_triggered()
+{
+    guiFindNext();
+}
+
+void MainWindow::guiFindNext()
+{
+    QTextCursor cursor = m_ui->txtDocument->textCursor();
+    int pos = cursor.position();
+    bool found = m_ui->txtDocument->find(m_txtFind->text());
+    if (! found) {
+        // wrap search
+        cursor = m_ui->txtDocument->textCursor();
+        cursor.setPosition(0, QTextCursor::MoveAnchor);
+        m_ui->txtDocument->setTextCursor(cursor);
+        found = m_ui->txtDocument->find(m_txtFind->text());
+    }
+
+    if (! found) {
+        cursor = m_ui->txtDocument->textCursor();
+        cursor.setPosition(pos, QTextCursor::MoveAnchor);
+        m_ui->txtDocument->setTextCursor(cursor);
+    }
+
+    m_lastSearchFound = found;
+    updateGui();
+}
+
+void MainWindow::guiFindPrevious()
+{
+    QTextCursor cursor = m_ui->txtDocument->textCursor();
+    int pos = cursor.position();
+    bool found = m_ui->txtDocument->find(m_txtFind->text(), QTextDocument::FindBackward);
+    if (! found) {
+        // wrap search
+        cursor = m_ui->txtDocument->textCursor();
+        cursor.setPosition(m_ui->txtDocument->toPlainText().size(), QTextCursor::MoveAnchor);
+        m_ui->txtDocument->setTextCursor(cursor);
+        found = m_ui->txtDocument->find(m_txtFind->text(), QTextDocument::FindBackward);
+    }
+
+    if (! found) {
+        cursor = m_ui->txtDocument->textCursor();
+        cursor.setPosition(pos, QTextCursor::MoveAnchor);
+        m_ui->txtDocument->setTextCursor(cursor);
+    }
+
+    m_lastSearchFound = found;
+    updateGui();
+}
+
+void MainWindow::updateSearch()
+{
+    // move cursor to beginning of current match
+    QTextCursor cursor = m_ui->txtDocument->textCursor();
+    int lower = cursor.anchor() < cursor.position() ? cursor.anchor() : cursor.position();
+    cursor.setPosition(lower, QTextCursor::MoveAnchor);
+    m_ui->txtDocument->setTextCursor(cursor);
+
+    guiFindNext();
 }

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLineEdit>
 
 namespace Ui {
     class MainWindow;
@@ -16,6 +17,7 @@ public:
 protected:
     void changeEvent(QEvent * e);
     void closeEvent(QCloseEvent * e);
+    void keyPressEvent(QKeyEvent * e);
 
 private: //variables
     Ui::MainWindow * m_ui;
@@ -31,6 +33,15 @@ private: //variables
     // stored in memory and while the application is open
     QString m_password;
 
+    // the find text box in the status bar
+    QLineEdit * m_txtFind;
+
+    // true if the last search the user did found something
+    bool m_lastSearchFound;
+
+    // the normal background color of a QLineEdit
+    QColor m_defaultBackgroundColor;
+
 private: //methods
     // prompts the user to save if necessary. Returns true if they did not
     // press Cancel
@@ -45,9 +56,11 @@ private: //methods
     bool guiSaveAs();
 
     // opens an executable file and set as current document
+    // returns true if they didn't cancel
     bool guiOpen(QString targetExe);
 
     // unassociates the target exe and clears the document
+    // returns true if they didn't cancel
     bool guiNew();
 
     // make sure the title bar always displays the correct thing
@@ -64,6 +77,8 @@ private: //methods
     void save();
 
 private slots:
+    void on_actionFindNext_triggered();
+    void on_actionFind_triggered();
     void on_actionChangePassword_triggered();
     void on_actionAbout_triggered();
     void on_actionInsertDateTime_triggered();
@@ -82,6 +97,15 @@ private slots:
     void on_actionUndo_triggered();
     void on_txtDocument_redoAvailable(bool b);
     void on_txtDocument_undoAvailable(bool b);
+
+    // select and scroll to the next instance of the search text
+    void guiFindNext();
+    void guiFindPrevious();
+
+    // respond to a change in the search text. If the current match can be
+    // expanded, do it. otherwise find next.
+    void updateSearch();
+
 };
 
 #endif // MAINWINDOW_H

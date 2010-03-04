@@ -92,6 +92,7 @@
    <addaction name="menu_Format"/>
    <addaction name="menu_Help"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew">
    <property name="text">
     <string>&amp;New</string>

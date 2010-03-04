@@ -6,6 +6,7 @@
 #include "ChangePasswordDialog.h"
 #include "ExeParser.h"
 #include "PasswordInputDialog.h"
+#include "Encryption.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -108,13 +109,17 @@ bool MainWindow::guiOpen(QString targetExe)
             if (dialog.exec() == QDialog::Rejected)
                 return false; // user cancel
             QString password = dialog.password();
-            // TODO: something like
-            // DecryptObject obj = decrypted(doc, password);
-            // if (obj.success()) {
-            //    m_password = password;
-            //    m_ui.txtDocument.setText(obj.text());
-            //    break;
-            // }
+
+            bool ok;
+            QString text = Encryption::decrypted(doc, password, &ok);
+            if (ok) {
+                m_password = password;
+                m_ui->txtDocument->setPlainText(text);
+                break;
+            } else {
+                QMessageBox::warning(this, QApplication::applicationName(),
+                    tr("Invalid password."));
+            }
         }
     }
 
@@ -222,7 +227,7 @@ bool MainWindow::guiSave()
 void MainWindow::save()
 {
     // TODO: something like
-    // ExeParser::write(m_targetExe, encrypted(m_ui.txtDocument.text(), m_password));
+    ExeParser::write(m_targetExe, Encryption::encrypted(m_ui->txtDocument->toPlainText(), m_password));
 
     m_tainted = false;
     updateGui();
@@ -372,6 +377,11 @@ void MainWindow::guiFindNext()
     findText((QTextDocument::FindFlag) m_findFlags);
 }
 
+void MainWindow::guiFindPrevious()
+{
+    findText((QTextDocument::FindFlag) (m_findFlags & (int)QTextDocument::FindBackward));
+}
+
 void MainWindow::findText(QTextDocument::FindFlag flags)
 {
     QTextCursor cursor = m_ui->txtDocument->textCursor();
@@ -398,11 +408,6 @@ void MainWindow::findText(QTextDocument::FindFlag flags)
 
     m_lastSearchFound = found;
     updateGui();
-}
-
-void MainWindow::guiFindPrevious()
-{
-    findText((QTextDocument::FindFlag) (m_findFlags & (int)QTextDocument::FindBackward));
 }
 
 void MainWindow::updateSearch()

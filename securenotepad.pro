@@ -9,13 +9,15 @@ SOURCES += main.cpp \
     NewPasswordDialog.cpp \
     AboutDialog.cpp \
     ChangePasswordDialog.cpp \
-    PasswordInputDialog.cpp
+    PasswordInputDialog.cpp \
+    Encryption.cpp
 HEADERS += MainWindow.h \
     ExeParser.h \
     NewPasswordDialog.h \
     AboutDialog.h \
     ChangePasswordDialog.h \
-    PasswordInputDialog.h
+    PasswordInputDialog.h \
+    Encryption.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \

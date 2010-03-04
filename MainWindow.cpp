@@ -24,7 +24,10 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
     setCentralWidget(m_ui->txtDocument);
 
-    guiOpen(targetExe);
+    if (targetExe.isNull())
+        guiNew();
+    else
+        guiOpen(targetExe);
 }
 
 MainWindow::~MainWindow()
@@ -216,15 +219,21 @@ void MainWindow::on_actionSaveAs_triggered()
     guiSaveAs();
 }
 
-void MainWindow::on_actionNew_triggered()
+bool MainWindow::guiNew()
 {
     if (! ensureSaved())
-        return;
+        return false;
 
     m_targetExe = QString();
     m_ui->txtDocument->setPlainText("");
     m_tainted = false;
     updateGui();
+    return true;
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    guiNew();
 }
 
 void MainWindow::on_actionWordWrap_toggled(bool )

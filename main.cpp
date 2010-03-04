@@ -24,6 +24,15 @@ int main(int argc, char *argv[])
 
     // determine whether to run or copy ourself to temp and run that
     QString targetExe = getTargetExe();
+
+    // if we're debugging, just start the app without doing that temp file
+    // fanagaling
+#ifndef QT_NO_DEBUG
+    MainWindow w;
+    w.show();
+    return app.exec();
+#endif
+
     if (targetExe.isNull()) {
         // this is the user double clicking the file.
         QString tmpExePath = copySelfToTemp();

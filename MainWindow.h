@@ -10,7 +10,7 @@ namespace Ui {
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
-    MainWindow(QString targetExe, QWidget *parent = 0);
+    MainWindow(QString targetExe = QString(), QWidget *parent = 0);
     ~MainWindow();
 
 protected:
@@ -46,6 +46,9 @@ private: //methods
 
     // opens an executable file and set as current document
     bool guiOpen(QString targetExe);
+
+    // unassociates the target exe and clears the document
+    bool guiNew();
 
     // make sure the title bar always displays the correct thing
     void updateCaption();

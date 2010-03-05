@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     ChangePasswordDialog.cpp \
     PasswordInputDialog.cpp \
     Encryption.cpp \
-    PasswordStrengthWidget.cpp
+    PasswordStrengthWidget.cpp \
+    FlatButton.cpp
 HEADERS += MainWindow.h \
     ExeParser.h \
     NewPasswordDialog.h \
@@ -19,7 +20,8 @@ HEADERS += MainWindow.h \
     ChangePasswordDialog.h \
     PasswordInputDialog.h \
     Encryption.h \
-    PasswordStrengthWidget.h
+    PasswordStrengthWidget.h \
+    FlatButton.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \

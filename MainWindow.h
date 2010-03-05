@@ -117,6 +117,9 @@ private slots:
     void toggleWholeWordSearch(bool value);
     void toggleCaseSensitiveSearch(bool value);
 
+    // hide the status bar and set focus to the document
+    void hideStatusBar();
+
 };
 
 #endif // MAINWINDOW_H

@@ -7,6 +7,7 @@
 #include "ExeParser.h"
 #include "PasswordInputDialog.h"
 #include "Encryption.h"
+#include "FlatButton.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -15,6 +16,7 @@
 #include <QDateTime>
 #include <QLabel>
 #include <QCheckBox>
+#include <QPushButton>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
@@ -31,6 +33,13 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     setCentralWidget(m_ui->txtDocument);
 
     // set up the search status bar
+    // close box
+    FlatButton * closeButton = new FlatButton("X", m_ui->statusBar);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(hideStatusBar()));
+    closeButton->setMaximumWidth(closeButton->height());
+    closeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_ui->statusBar->addWidget(closeButton);
+
     // "Find:" label
     QLabel * findLabel = new QLabel(tr("Find:"), m_ui->statusBar);
     m_ui->statusBar->addWidget(findLabel);
@@ -43,17 +52,19 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_ui->statusBar->addWidget(m_txtFind);
 
     // whole words only checkbox
-    QCheckBox * wholeWords = new QCheckBox(tr("Whole Words Only"), m_ui->statusBar);
+    QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->statusBar);
     connect(wholeWords, SIGNAL(toggled(bool)), this, SLOT(toggleWholeWordSearch(bool)));
     m_ui->statusBar->addWidget(wholeWords);
 
     // case sensitive checkbox
-    QCheckBox * caseSensitive = new QCheckBox(tr("Case Sensitive"), m_ui->statusBar);
+    QCheckBox * caseSensitive = new QCheckBox(tr("Mat&ch Case"), m_ui->statusBar);
     connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
     m_ui->statusBar->addWidget(caseSensitive);
 
     // hide until we get the batman signal
     m_ui->statusBar->hide();
+
+    this->setMouseTracking(true);
 
     if (targetExe.isNull())
         guiNew();
@@ -66,7 +77,6 @@ MainWindow::~MainWindow()
     delete m_txtFind;
     delete m_ui;
 }
-
 
 void MainWindow::toggleWholeWordSearch(bool value)
 {
@@ -89,11 +99,16 @@ void MainWindow::toggleCaseSensitiveSearch(bool value)
 void MainWindow::keyPressEvent(QKeyEvent * e)
 {
     if (e->key() == Qt::Key_Escape && m_ui->statusBar->isVisible()) {
-        m_ui->statusBar->hide();
-        m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+        hideStatusBar();
     } else if (e->key() == Qt::Key_F3 && e->modifiers() & Qt::ShiftModifier) {
         guiFindPrevious();
     }
+}
+
+void MainWindow::hideStatusBar()
+{
+    m_ui->statusBar->hide();
+    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
 }
 
 bool MainWindow::guiOpen(QString targetExe)

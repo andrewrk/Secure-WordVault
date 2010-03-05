@@ -3,6 +3,7 @@
 QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
 {
     // TODO replace this with the actual decryption algorithm
+    *ok = true;
     return QString(document);
 }
 

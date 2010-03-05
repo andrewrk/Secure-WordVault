@@ -8,6 +8,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     m_ui->setupUi(this);
 
     m_ui->lblAbout->setText(tr("About %1").arg(QApplication::applicationName()));
+    this->setWindowTitle(m_ui->lblAbout->text());
 }
 
 AboutDialog::~AboutDialog()

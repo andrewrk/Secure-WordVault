@@ -84,6 +84,12 @@ void ExeParser::write(QString exeFile, QByteArray document)
 
     out.seek(contentStart);
     out.write(document);
+
+    // write footer
+    qint64 size = document.size();
+    out.write((const char *) &size, sizeof(qint64));
+    out.write((const char *) guid, sizeof(guid));
+
     out.close();
 
 }

@@ -1,11 +1,10 @@
-#include <QtGui/QApplication>
-#include <QtCore/QObject>
 #include "MainWindow.h"
-
 #include "ExeParser.h"
 
-#include <QProcess>
-#include <QDir>
+#include <QtCore/QProcess>
+#include <QtCore/QDir>
+#include <QtCore/QObject>
+#include <QtGui/QApplication>
 
 const char * targetParameter = "--target";
 QString getTargetExe();
@@ -36,7 +35,6 @@ int main(int argc, char *argv[])
     if (targetExe.isNull()) {
         // this is the user double clicking the file.
         QString tmpExePath = copySelfToTemp();
-
         QStringList args;
         args.append(targetParameter);
         args.append(QApplication::applicationFilePath());

@@ -18,6 +18,8 @@
 #include <QPushButton>
 #include <QTextDocumentFragment>
 
+#include <cstdlib>
+
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow),
@@ -74,12 +76,12 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     // hide until we get the batman signal
     m_ui->statusBar->hide();
 
-    this->setMouseTracking(true);
-
-    if (targetExe.isNull())
+    if (targetExe.isNull()) {
         guiNew();
-    else
-        guiOpen(targetExe);
+    } else {
+        if (! guiOpen(targetExe))
+            std::exit(0);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -124,7 +126,7 @@ void MainWindow::hideStatusBar()
 bool MainWindow::guiOpen(QString targetExe)
 {
     QByteArray doc = ExeParser::read(targetExe);
-    if (doc.size() == 0) {
+    if (doc.isEmpty()) {
         // new document
         m_ui->txtDocument->setPlainText("");
     } else {

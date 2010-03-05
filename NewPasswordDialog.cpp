@@ -8,6 +8,7 @@ NewPasswordDialog::NewPasswordDialog(QWidget *parent) :
     m_ui(new Ui::NewPasswordDialog)
 {
     m_ui->setupUi(this);
+    m_ui->strengthMeter->attachTo(m_ui->txtPassword);
 }
 
 NewPasswordDialog::~NewPasswordDialog()

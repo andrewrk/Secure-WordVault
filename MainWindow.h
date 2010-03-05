@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLineEdit>
 #include <QTextDocument>
+#include <QLabel>
 
 namespace Ui {
     class MainWindow;
@@ -36,6 +37,8 @@ private: //variables
 
     // the find text box in the status bar
     QLineEdit * m_txtFind;
+    QLineEdit * m_txtReplace;
+    QLabel * m_replaceLabel;
 
     // true if the last search the user did found something
     bool m_lastSearchFound;
@@ -83,7 +86,12 @@ private: //methods
     // find forward or backward depending on flags
     void findText(QTextDocument::FindFlag flags);
 
+    // show the find or replace gui panel
+    void showFindGui();
+    void showReplaceGui();
+
 private slots:
+    void on_actionReplace_triggered();
     void on_actionFindNext_triggered();
     void on_actionFind_triggered();
     void on_actionChangePassword_triggered();
@@ -108,6 +116,7 @@ private slots:
     // select and scroll to the next instance of the search text
     void guiFindNext();
     void guiFindPrevious();
+    void guiReplaceNext();
 
     // respond to a change in the search text. If the current match can be
     // expanded, do it. otherwise find next.

@@ -14,9 +14,9 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDateTime>
-#include <QLabel>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QTextDocumentFragment>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +24,7 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_tainted(false),
     m_targetExe(QString()),
     m_txtFind(NULL),
+    m_txtReplace(NULL),
     m_lastSearchFound(true),
     m_findFlags((QTextDocument::FindFlag) 0)
 {
@@ -50,6 +51,15 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     connect(m_txtFind, SIGNAL(returnPressed()), this, SLOT(guiFindNext()));
     connect(m_txtFind, SIGNAL(textChanged(QString)), this, SLOT(updateSearch()));
     m_ui->statusBar->addWidget(m_txtFind);
+
+    // replace label
+    m_replaceLabel = new QLabel(tr("Replace With:"), m_ui->statusBar);
+    m_ui->statusBar->addWidget(m_replaceLabel);
+
+    // replace text box
+    m_txtReplace = new QLineEdit(m_ui->statusBar);
+    connect(m_txtReplace, SIGNAL(returnPressed()), this, SLOT(guiReplaceNext()));
+    m_ui->statusBar->addWidget(m_txtReplace);
 
     // whole words only checkbox
     QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->statusBar);
@@ -376,9 +386,35 @@ void MainWindow::on_actionChangePassword_triggered()
 
 void MainWindow::on_actionFind_triggered()
 {
+    showFindGui();
+}
+
+void MainWindow::showFindGui()
+{
     m_ui->statusBar->show();
+
+    m_replaceLabel->hide();
+    m_txtReplace->hide();
+
+    if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
+        m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
+
     m_txtFind->setFocus(Qt::OtherFocusReason);
     m_txtFind->selectAll();
+}
+
+void MainWindow::showReplaceGui()
+{
+    m_ui->statusBar->show();
+
+    m_replaceLabel->show();
+    m_txtReplace->show();
+
+    if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
+        m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
+
+    m_txtReplace->setFocus(Qt::OtherFocusReason);
+    m_txtReplace->selectAll();
 }
 
 void MainWindow::on_actionFindNext_triggered()
@@ -389,6 +425,16 @@ void MainWindow::on_actionFindNext_triggered()
 void MainWindow::guiFindNext()
 {
     findText((QTextDocument::FindFlag) m_findFlags);
+}
+
+void MainWindow::guiReplaceNext()
+{
+    // replace the current selection
+    if (m_ui->txtDocument->textCursor().selection().toPlainText() == m_txtFind->text())
+        m_ui->txtDocument->textCursor().insertText(m_txtReplace->text());
+
+    // find next
+    guiFindNext();
 }
 
 void MainWindow::guiFindPrevious()
@@ -433,4 +479,9 @@ void MainWindow::updateSearch()
     m_ui->txtDocument->setTextCursor(cursor);
 
     guiFindNext();
+}
+
+void MainWindow::on_actionReplace_triggered()
+{
+    showReplaceGui();
 }

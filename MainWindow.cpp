@@ -32,7 +32,10 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    // tidy up some menus
     m_ui->actionExit->setShortcut(QKeySequence(Qt::AltModifier | Qt::Key_F4));
+    m_ui->actionAbout->setText(tr("&About %1...").arg(QApplication::applicationName()));
+
     setCentralWidget(m_ui->txtDocument);
 
     // set up the search status bar

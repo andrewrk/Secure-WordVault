@@ -270,7 +270,7 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;About SecureNotepad...</string>
+    <string>&amp;About...</string>
    </property>
    <property name="toolTip">
     <string>Learn about this program</string>

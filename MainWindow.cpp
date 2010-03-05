@@ -226,7 +226,6 @@ bool MainWindow::guiSave()
 
 void MainWindow::save()
 {
-    // TODO: something like
     ExeParser::write(m_targetExe, Encryption::encrypted(m_ui->txtDocument->toPlainText(), m_password));
 
     m_tainted = false;

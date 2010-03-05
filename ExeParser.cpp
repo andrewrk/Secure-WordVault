@@ -1,5 +1,6 @@
 #include "ExeParser.h"
 
+#include <QApplication>
 #include <cassert>
 
 // generated from http://www.guidgenerator.com/online-guid-generator.aspx
@@ -70,7 +71,13 @@ QByteArray ExeParser::read(QString exeFile)
 
 void ExeParser::write(QString exeFile, QByteArray document)
 {
+    // if the file doesn't exist, copy this exe to it
     QFile out(exeFile);
+
+    if (! out.exists())
+        copyOnlyExe(QApplication::applicationFilePath(), exeFile);
+
+    // overwrite the document
     out.open(QIODevice::ReadWrite);
     qint64 contentStart, contentEnd;
     parse(out, contentStart, contentEnd);

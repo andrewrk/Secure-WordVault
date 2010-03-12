@@ -411,7 +411,10 @@ void MainWindow::on_actionChangePassword_triggered()
     ChangePasswordDialog dialog(m_password, this);
     if (dialog.exec() == QDialog::Accepted) {
         m_password = dialog.password();
-        guiSave();
+        if (guiSave()) {
+            QMessageBox::information(this, QApplication::applicationName(),
+                tr("Password changed successfully."), QMessageBox::Ok);
+        }
     }
 }
 

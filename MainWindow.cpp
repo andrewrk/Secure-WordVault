@@ -26,7 +26,11 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_tainted(false),
     m_targetExe(QString()),
     m_txtFind(NULL),
+    m_txtFindAction(NULL),
     m_txtReplace(NULL),
+    m_txtReplaceAction(NULL),
+    m_replaceLabel(NULL),
+    m_replaceLabelAction(NULL),
     m_lastSearchFound(true),
     m_findFlags((QTextDocument::FindFlag) 0)
 {
@@ -38,47 +42,56 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 
     setCentralWidget(m_ui->txtDocument);
 
-    // set up the search status bar
+    // set up the search bar
     // close box
-    FlatButton * closeButton = new FlatButton("X", m_ui->statusBar);
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(hideStatusBar()));
+    FlatButton * closeButton = new FlatButton("X", m_ui->findBar);
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(hideFindBar()));
     closeButton->setMaximumWidth(closeButton->height());
     closeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_ui->statusBar->addWidget(closeButton);
+    m_ui->findBar->addWidget(closeButton);
 
     // "Find:" label
-    QLabel * findLabel = new QLabel(tr("Find:"), m_ui->statusBar);
-    m_ui->statusBar->addWidget(findLabel);
+    QLabel * findLabel = new QLabel(tr("Find:"), m_ui->findBar);
+    m_ui->findBar->addWidget(findLabel);
 
     // text box
-    m_txtFind = new QLineEdit(m_ui->statusBar);
+    m_txtFind = new QLineEdit(m_ui->findBar);
+    m_txtFind->setMaximumWidth(200);
     m_defaultBackgroundColor = m_txtFind->palette().color(m_txtFind->backgroundRole());
     connect(m_txtFind, SIGNAL(returnPressed()), this, SLOT(guiFindNext()));
     connect(m_txtFind, SIGNAL(textChanged(QString)), this, SLOT(updateSearch()));
-    m_ui->statusBar->addWidget(m_txtFind);
+    m_txtFindAction = m_ui->findBar->addWidget(m_txtFind);
 
     // replace label
-    m_replaceLabel = new QLabel(tr("Replace With:"), m_ui->statusBar);
-    m_ui->statusBar->addWidget(m_replaceLabel);
+    m_replaceLabel = new QLabel(tr("Replace With:"), m_ui->findBar);
+    m_replaceLabelAction = m_ui->findBar->addWidget(m_replaceLabel);
 
     // replace text box
-    m_txtReplace = new QLineEdit(m_ui->statusBar);
+    m_txtReplace = new QLineEdit(m_ui->findBar);
+    m_txtReplace->setMaximumWidth(200);
     connect(m_txtReplace, SIGNAL(returnPressed()), this, SLOT(guiReplaceNext()));
-    m_ui->statusBar->addWidget(m_txtReplace);
+    m_txtReplaceAction = m_ui->findBar->addWidget(m_txtReplace);
 
     // whole words only checkbox
-    QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->statusBar);
+    QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->findBar);
     connect(wholeWords, SIGNAL(toggled(bool)), this, SLOT(toggleWholeWordSearch(bool)));
-    m_ui->statusBar->addWidget(wholeWords);
+    m_ui->findBar->addWidget(wholeWords);
 
     // case sensitive checkbox
-    QCheckBox * caseSensitive = new QCheckBox(tr("Mat&ch Case"), m_ui->statusBar);
+    QCheckBox * caseSensitive = new QCheckBox(tr("Mat&ch Case"), m_ui->findBar);
     connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
-    m_ui->statusBar->addWidget(caseSensitive);
+    m_ui->findBar->addWidget(caseSensitive);
 
     // hide until we get the batman signal
-    m_ui->statusBar->hide();
+    m_ui->findBar->hide();
 
+    // determine the default hilight palette colors
+    QPalette palette = m_ui->txtDocument->palette();
+    m_defaultHilightColor = palette.color(QPalette::Highlight);
+    m_defaultHilightTextColor = palette.color(QPalette::HighlightedText);
+
+
+    // open the file that was passed in
     if (targetExe.isNull()) {
         guiNew();
     } else {
@@ -113,17 +126,19 @@ void MainWindow::toggleCaseSensitiveSearch(bool value)
 
 void MainWindow::keyPressEvent(QKeyEvent * e)
 {
-    if (e->key() == Qt::Key_Escape && m_ui->statusBar->isVisible()) {
-        hideStatusBar();
+    if (e->key() == Qt::Key_Escape && m_ui->findBar->isVisible()) {
+        hideFindBar();
     } else if (e->key() == Qt::Key_F3 && e->modifiers() & Qt::ShiftModifier) {
         guiFindPrevious();
     }
 }
 
-void MainWindow::hideStatusBar()
+void MainWindow::hideFindBar()
 {
-    m_ui->statusBar->hide();
+    m_ui->findBar->hide();
     m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+
+    updateGui();
 }
 
 bool MainWindow::guiOpen(QString targetExe)
@@ -174,6 +189,16 @@ void MainWindow::updateGui()
         pal.setColor(m_txtFind->backgroundRole(), QColor(255, 102, 102));
     m_txtFind->setPalette(pal);
 
+    // color the search hilighted text yellow if found
+    pal = m_ui->txtDocument->palette();
+    if (m_ui->findBar->isVisible()) {
+        pal.setColor(QPalette::Highlight, Qt::yellow);
+        pal.setColor(QPalette::HighlightedText, Qt::black);
+    } else {
+        pal.setColor(QPalette::Highlight, m_defaultHilightColor);
+        pal.setColor(QPalette::HighlightedText, m_defaultHilightTextColor);
+    }
+    m_ui->txtDocument->setPalette(pal);
 
     updateCaption();
 }
@@ -396,30 +421,34 @@ void MainWindow::on_actionFind_triggered()
 
 void MainWindow::showFindGui()
 {
-    m_ui->statusBar->show();
+    m_ui->findBar->show();
 
-    m_replaceLabel->hide();
-    m_txtReplace->hide();
+    m_replaceLabelAction->setVisible(false);
+    m_txtReplaceAction->setVisible(false);
 
     if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
 
     m_txtFind->setFocus(Qt::OtherFocusReason);
     m_txtFind->selectAll();
+
+    updateGui();
 }
 
 void MainWindow::showReplaceGui()
 {
-    m_ui->statusBar->show();
+    m_ui->findBar->show();
 
-    m_replaceLabel->show();
-    m_txtReplace->show();
+    m_replaceLabelAction->setVisible(true);
+    m_txtReplaceAction->setVisible(true);
 
     if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
 
     m_txtReplace->setFocus(Qt::OtherFocusReason);
     m_txtReplace->selectAll();
+
+    updateGui();
 }
 
 void MainWindow::on_actionFindNext_triggered()

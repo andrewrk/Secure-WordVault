@@ -35,10 +35,13 @@ private: //variables
     // stored in memory and while the application is open
     QString m_password;
 
-    // the find text box in the status bar
+    // the find text box in the find tool bar
     QLineEdit * m_txtFind;
+    QAction * m_txtFindAction;
     QLineEdit * m_txtReplace;
+    QAction * m_txtReplaceAction;
     QLabel * m_replaceLabel;
+    QAction * m_replaceLabelAction;
 
     // true if the last search the user did found something
     bool m_lastSearchFound;
@@ -48,6 +51,10 @@ private: //variables
 
     // flags to use when finding
     int m_findFlags;
+
+    // the normal hilight color of a text box
+    QColor m_defaultHilightColor;
+    QColor m_defaultHilightTextColor;
 
 private: //methods
     // prompts the user to save if necessary. Returns true if they did not
@@ -126,8 +133,8 @@ private slots:
     void toggleWholeWordSearch(bool value);
     void toggleCaseSensitiveSearch(bool value);
 
-    // hide the status bar and set focus to the document
-    void hideStatusBar();
+    // hide the find bar and set focus to the document
+    void hideFindBar();
 
 };
 

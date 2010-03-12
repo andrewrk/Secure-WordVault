@@ -499,7 +499,7 @@ void MainWindow::guiReplacePrevious()
 
 void MainWindow::guiFindPrevious()
 {
-    findText((QTextDocument::FindFlag) (m_findFlags & (int)QTextDocument::FindBackward));
+    findText((QTextDocument::FindFlag) (m_findFlags | QTextDocument::FindBackward));
 }
 
 void MainWindow::findText(QTextDocument::FindFlag flags)

@@ -36,16 +36,16 @@ void PasswordStrengthWidget::paintEvent(QPaintEvent *)
     colors.append(Qt::red);
     names.append(tr("Very Weak"));
 
-    colors.append(Qt::darkYellow);
+    colors.append(QColor(255, 167, 20));
     names.append(tr("Weak"));
 
     colors.append(Qt::yellow);
     names.append(tr("Good"));
 
-    colors.append(Qt::green);
+    colors.append(QColor(141, 228, 40));
     names.append(tr("Strong"));
 
-    colors.append(Qt::darkGreen);
+    colors.append(QColor(0, 162, 49));
     names.append(tr("Very Strong"));
 
     int index = (int) (m_strength * colors.size());

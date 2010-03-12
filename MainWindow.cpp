@@ -151,7 +151,7 @@ bool MainWindow::guiOpen(QString targetExe)
     } else {
         // prompt for password and decrypt
         while(true) {
-            PasswordInputDialog dialog(this);
+            PasswordInputDialog dialog(QFileInfo(m_targetExe).baseName(), this);
             if (dialog.exec() == QDialog::Rejected)
                 return false; // user cancel
             QString password = dialog.password();

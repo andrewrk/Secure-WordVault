@@ -10,11 +10,10 @@ namespace Ui {
 class PasswordInputDialog : public QDialog {
     Q_OBJECT
 public:
-    PasswordInputDialog(QWidget *parent = 0);
+    PasswordInputDialog(QString filename, QWidget *parent = 0);
     ~PasswordInputDialog();
 
     QString password();
-
 protected:
     void changeEvent(QEvent *e);
 

@@ -305,6 +305,9 @@ bool MainWindow::ensurePassword()
 
 bool MainWindow::guiSaveAs()
 {
+    if (! ensurePassword())
+        return false; // user cancelled
+
     // prompt for a location to save the new file
     QString file = QFileDialog::getSaveFileName(this, tr("Save As"),
         QFileInfo(m_targetExe).absoluteDir().path(), tr("Application (*.exe)"));
@@ -312,8 +315,6 @@ bool MainWindow::guiSaveAs()
         return false; // pressed cancel
     m_targetExe = file;
 
-    if (! ensurePassword())
-        return false; // user cancelled
 
     save();
     return true;

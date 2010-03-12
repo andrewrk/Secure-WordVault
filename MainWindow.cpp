@@ -17,6 +17,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QTextDocumentFragment>
+#include <QFontDialog>
 
 #include <cstdlib>
 
@@ -522,4 +523,9 @@ void MainWindow::updateSearch()
 void MainWindow::on_actionReplace_triggered()
 {
     showReplaceGui();
+}
+
+void MainWindow::on_actionFont_triggered()
+{
+    m_ui->txtDocument->setFont(QFontDialog::getFont(NULL, m_ui->txtDocument->font(), this));
 }

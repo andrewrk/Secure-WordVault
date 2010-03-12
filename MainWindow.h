@@ -98,6 +98,7 @@ private: //methods
     void showReplaceGui();
 
 private slots:
+    void on_actionFont_triggered();
     void on_actionReplace_triggered();
     void on_actionFindNext_triggered();
     void on_actionFind_triggered();

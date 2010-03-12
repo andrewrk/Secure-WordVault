@@ -89,8 +89,9 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
     m_ui->findBar->addWidget(caseSensitive);
 
-    // hide until we get the batman signal
-    m_ui->findBar->hide();
+    // jump the gun
+    showFindGui();
+    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
 
     // determine the default hilight palette colors
     QPalette palette = m_ui->txtDocument->palette();
@@ -190,7 +191,7 @@ void MainWindow::updateGui()
 
     // color the search text box red if not found
     QPalette pal = m_txtFind->palette();
-    if (m_lastSearchFound)
+    if (m_lastSearchFound || m_txtFind->text().isEmpty())
         pal.setColor(m_txtFind->backgroundRole(), m_defaultBackgroundColor);
     else
         pal.setColor(m_txtFind->backgroundRole(), QColor(255, 102, 102));
@@ -198,7 +199,7 @@ void MainWindow::updateGui()
 
     // color the search hilighted text yellow if found
     pal = m_ui->txtDocument->palette();
-    if (m_ui->findBar->isVisible()) {
+    if (m_ui->findBar->isVisible() && ! m_txtFind->text().isEmpty()) {
         pal.setColor(QPalette::Highlight, Qt::yellow);
         pal.setColor(QPalette::HighlightedText, Qt::black);
     } else {

@@ -254,9 +254,9 @@ bool MainWindow::ensureSaved()
         QMessageBox::StandardButton response = QMessageBox::question(this,
             QApplication::applicationName(),
             tr("You have unsaved changes. Would you like to save?"),
-            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
-            QMessageBox::Yes);
-        if (response == QMessageBox::Yes)
+            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+            QMessageBox::Save);
+        if (response == QMessageBox::Save)
             guiSave();
         return response != QMessageBox::Cancel;
     } else {

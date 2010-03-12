@@ -10,3 +10,4 @@ Makefile.Release
 securenotepad
 object_script.securenotepad.Release
 object_script.securenotepad.Debug
+qrc_resources.cpp

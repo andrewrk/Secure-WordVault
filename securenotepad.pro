@@ -27,3 +27,4 @@ FORMS += MainWindow.ui \
     AboutDialog.ui \
     ChangePasswordDialog.ui \
     PasswordInputDialog.ui
+RESOURCES += resources.qrc

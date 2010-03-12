@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>GoToNextHS.png</file>
+        <file>GoToPrevious.png</file>
+    </qresource>
+</RCC>

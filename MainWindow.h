@@ -42,6 +42,8 @@ private: //variables
     QAction * m_txtReplaceAction;
     QLabel * m_replaceLabel;
     QAction * m_replaceLabelAction;
+    QAction * m_replaceNextAction;
+    QAction * m_replacePreviousAction;
 
     // true if the last search the user did found something
     bool m_lastSearchFound;
@@ -125,6 +127,7 @@ private slots:
     void guiFindNext();
     void guiFindPrevious();
     void guiReplaceNext();
+    void guiReplacePrevious();
 
     // respond to a change in the search text. If the current match can be
     // expanded, do it. otherwise find next.

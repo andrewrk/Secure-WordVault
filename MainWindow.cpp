@@ -45,11 +45,7 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 
     // set up the search bar
     // close box
-    FlatButton * closeButton = new FlatButton("X", m_ui->findBar);
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(hideFindBar()));
-    closeButton->setMaximumWidth(closeButton->height());
-    closeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_ui->findBar->addWidget(closeButton);
+    m_ui->findBar->addAction("X", this, SLOT(hideFindBar()));
 
     // "Find:" label
     QLabel * findLabel = new QLabel(tr("Find:"), m_ui->findBar);
@@ -58,10 +54,15 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     // text box
     m_txtFind = new QLineEdit(m_ui->findBar);
     m_txtFind->setMaximumWidth(200);
+    m_txtFind->setMinimumWidth(50);
     m_defaultBackgroundColor = m_txtFind->palette().color(m_txtFind->backgroundRole());
     connect(m_txtFind, SIGNAL(returnPressed()), this, SLOT(guiFindNext()));
     connect(m_txtFind, SIGNAL(textChanged(QString)), this, SLOT(updateSearch()));
     m_txtFindAction = m_ui->findBar->addWidget(m_txtFind);
+
+    // find next and previous buttons
+    m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiFindPrevious()));
+    m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiFindNext()));
 
     // replace label
     m_replaceLabel = new QLabel(tr("Replace With:"), m_ui->findBar);
@@ -70,8 +71,13 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     // replace text box
     m_txtReplace = new QLineEdit(m_ui->findBar);
     m_txtReplace->setMaximumWidth(200);
+    m_txtReplace->setMinimumWidth(50);
     connect(m_txtReplace, SIGNAL(returnPressed()), this, SLOT(guiReplaceNext()));
     m_txtReplaceAction = m_ui->findBar->addWidget(m_txtReplace);
+
+    // replace next and previous buttons
+    m_replacePreviousAction = m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiReplacePrevious()));
+    m_replaceNextAction = m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiReplaceNext()));
 
     // whole words only checkbox
     QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->findBar);
@@ -430,6 +436,8 @@ void MainWindow::showFindGui()
 
     m_replaceLabelAction->setVisible(false);
     m_txtReplaceAction->setVisible(false);
+    m_replaceNextAction->setVisible(false);
+    m_replacePreviousAction->setVisible(false);
 
     if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
@@ -446,6 +454,8 @@ void MainWindow::showReplaceGui()
 
     m_replaceLabelAction->setVisible(true);
     m_txtReplaceAction->setVisible(true);
+    m_replaceNextAction->setVisible(true);
+    m_replacePreviousAction->setVisible(true);
 
     if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
@@ -474,6 +484,16 @@ void MainWindow::guiReplaceNext()
 
     // find next
     guiFindNext();
+}
+
+void MainWindow::guiReplacePrevious()
+{
+    // replace the current selection
+    if (m_ui->txtDocument->textCursor().selection().toPlainText() == m_txtFind->text())
+        m_ui->txtDocument->textCursor().insertText(m_txtReplace->text());
+
+    // find previous
+    guiFindPrevious();
 }
 
 void MainWindow::guiFindPrevious()

@@ -12,7 +12,11 @@ SOURCES += main.cpp \
     PasswordInputDialog.cpp \
     Encryption.cpp \
     PasswordStrengthWidget.cpp \
-    FlatButton.cpp
+    FlatButton.cpp \
+    aestab.c \
+    aeskey.c \
+    aescrypt.c \
+    aes_modes.c
 HEADERS += MainWindow.h \
     ExeParser.h \
     NewPasswordDialog.h \
@@ -21,7 +25,14 @@ HEADERS += MainWindow.h \
     PasswordInputDialog.h \
     Encryption.h \
     PasswordStrengthWidget.h \
-    FlatButton.h
+    FlatButton.h \
+    brg_types.h \
+    brg_endian.h \
+    aestab.h \
+    aesopt.h \
+    aescpp.h \
+    aes.h \
+    aes_via_ace.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \

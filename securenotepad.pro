@@ -12,11 +12,7 @@ SOURCES += main.cpp \
     PasswordInputDialog.cpp \
     Encryption.cpp \
     PasswordStrengthWidget.cpp \
-    FlatButton.cpp \
-    aestab.c \
-    aeskey.c \
-    aescrypt.c \
-    aes_modes.c
+    FlatButton.cpp
 HEADERS += MainWindow.h \
     ExeParser.h \
     NewPasswordDialog.h \
@@ -26,16 +22,12 @@ HEADERS += MainWindow.h \
     Encryption.h \
     PasswordStrengthWidget.h \
     FlatButton.h \
-    brg_types.h \
-    brg_endian.h \
-    aestab.h \
-    aesopt.h \
-    aescpp.h \
-    aes.h \
-    aes_via_ace.h
+    ../../../../MinGW/include/openssl/evp.h \
+    ../../../../MinGW/include/openssl/md5.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \
     ChangePasswordDialog.ui \
     PasswordInputDialog.ui
 RESOURCES += resources.qrc
+LIBS += "C:\MinGW\lib\libeay32.dll.a"

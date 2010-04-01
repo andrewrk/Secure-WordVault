@@ -87,10 +87,10 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
 {
     EVP_CIPHER_CTX en_ctx;
     EVP_CIPHER_CTX de_ctx;
-    //EVP_MD_CTX mdctx;
+    EVP_MD_CTX mdctx;
 
-    //unsigned char md_value[EVP_MAX_MD_SIZE];
-    //unsigned int md_len;
+    unsigned char md_value[EVP_MAX_MD_SIZE], stored_md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len;
 
     unsigned int Salt[] = {12345, 54321};
     unsigned char *KeyData, *DocData;
@@ -102,17 +102,17 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     DocData = (unsigned char *)document.constData();
     DocDataLength = document.length();
 
-    //EVP_DigestInit(&mdctx, EVP_md5());
-    //EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
-    //EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
-    //EVP_MD_CTX_cleanup(&mdctx);
+    EVP_DigestInit(&mdctx, EVP_md5());
+    EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
+    EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
+    EVP_MD_CTX_cleanup(&mdctx);
+
+    memmove(stored_md_value, DocData + DocDataLength - 1 - md_len, md_len);
+    DocDataLength -= md_len;
 
     *ok = true;
-    //if (memcmp(DocData, md_value, md_len))
-    //    *ok = false;
-
-    //memmove(DocData, DocData + md_len, sizeof(DocData) - (md_len * sizeof(DocData[0])));
-   // DocDataLength -= 64;
+    if (memcmp(stored_md_value, md_value, md_len))
+        *ok = false;
 
     INITIALIZEAES(KeyData, KeyDataLen, (unsigned char *)&Salt, &en_ctx, &de_ctx);
 
@@ -127,10 +127,10 @@ QByteArray Encryption::encrypted(QString document, QString password)
 
     EVP_CIPHER_CTX en_ctx;
     EVP_CIPHER_CTX de_ctx;
-    //EVP_MD_CTX mdctx;
+    EVP_MD_CTX mdctx;
 
-    //unsigned char md_value[EVP_MAX_MD_SIZE];
-    //unsigned int md_len;
+    unsigned char md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len;
 
     unsigned int Salt[] = {12345, 54321};
     unsigned char *KeyData;
@@ -141,10 +141,10 @@ QByteArray Encryption::encrypted(QString document, QString password)
     KeyData = (unsigned char *)password.toLatin1().constData();
     KeyDataLen = password.length();
 
-    //EVP_DigestInit(&mdctx, EVP_md5());
-    //EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
-    //EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
-    //EVP_MD_CTX_cleanup(&mdctx);
+    EVP_DigestInit(&mdctx, EVP_md5());
+    EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
+    EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
+    EVP_MD_CTX_cleanup(&mdctx);
 
     INITIALIZEAES(KeyData, KeyDataLen, (unsigned char *)&Salt, &en_ctx, &de_ctx);
 
@@ -156,7 +156,7 @@ QByteArray Encryption::encrypted(QString document, QString password)
     ciphermsg = Encrypt(&en_ctx, (unsigned char *)msgtoencrypt, &inlen);
 
     QByteArray out;
-    //out.append((char *)md_value);
     out.append((char *)ciphermsg);
+    out.append((char *)md_value);
     return out;
 }

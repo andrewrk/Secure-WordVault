@@ -16,8 +16,9 @@ you can use any OS.
     this step will take minutes
 8.  mingw32-make
     this step will take hours
-9.  build the application in qt creator in release mode
-10. strip -s securenotepad.exe
-11. upx -9 securenotepad.exe
+9.  go to http://gnuwin32.sourceforge.net/packages/openssl.htm and download and extract the binary and developer files for OpenSSL, and extract them into your MinGW path
+10. build the application in qt creator in release mode
+11. strip -s securenotepad.exe
+12. upx -9 securenotepad.exe
     You can find upx at http://upx.sourceforge.net/
 

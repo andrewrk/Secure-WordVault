@@ -30,4 +30,4 @@ FORMS += MainWindow.ui \
     ChangePasswordDialog.ui \
     PasswordInputDialog.ui
 RESOURCES += resources.qrc
-LIBS += "openssl-0.9.8h-1-lib/lib/libeay32.dll.a"
+LIBS += "openssl-0.9.8n-lib/lib/libeay32.a"

@@ -1,9 +1,8 @@
 #include "Encryption.h"
-#include <openssl/evp.h>
+#include "openssl/evp.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 
 ///////////////////////////////////////
 //
@@ -80,9 +79,6 @@ EVP_DecryptUpdate(de_ctx, plaintext, &p_len, ciphertext, *len); EVP_DecryptFinal
 return plaintext;
 }
 
-
-
-
 QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
 {
     EVP_CIPHER_CTX en_ctx;
@@ -92,33 +88,34 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     unsigned char md_value[EVP_MAX_MD_SIZE], stored_md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len;
 
-    unsigned int Salt[] = {12345, 54321};
-    unsigned char *KeyData, *DocData;
-    int KeyDataLen, DocDataLength;
-    int outlen = document.length() + 1;
+    unsigned int salt[] = {12345, 54321};
+    unsigned char *keyData, *docData;
+    int keyDataLen, docDataLen;
 
-    KeyData = (unsigned char *)password.toLatin1().constData();
-    KeyDataLen = password.length();
-    DocData = (unsigned char *)document.constData();
-    DocDataLength = document.length();
+    keyData = (unsigned char *)password.toLatin1().constData();
+    keyDataLen = password.length();
+    docData = (unsigned char *)document.constData();
+    docDataLen = document.length();
 
     EVP_DigestInit(&mdctx, EVP_md5());
-    EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
+    EVP_DigestUpdate(&mdctx, keyData, (size_t) keyDataLen);
     EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
     EVP_MD_CTX_cleanup(&mdctx);
 
-    memmove(stored_md_value, DocData + DocDataLength - 1 - md_len, md_len);
-    DocDataLength -= md_len;
+    memmove(stored_md_value, docData + docDataLen - 1 - md_len, md_len);
+    docDataLen -= md_len;
 
     *ok = true;
     if (memcmp(stored_md_value, md_value, md_len))
         *ok = false;
 
-    INITIALIZEAES(KeyData, KeyDataLen, (unsigned char *)&Salt, &en_ctx, &de_ctx);
+    INITIALIZEAES(keyData, keyDataLen, (unsigned char *)&salt, &en_ctx, &de_ctx);
 
-    char *msg = (char *)DeCrypt(&de_ctx, DocData , &outlen);
+    char *msg = (char *)DeCrypt(&de_ctx, docData , &docDataLen);
 
-    // TODO replace this with the actual decryption algorithm
+    EVP_CIPHER_CTX_cleanup(&en_ctx);
+    EVP_CIPHER_CTX_cleanup(&de_ctx);
+
     return QString(msg);
 }
 
@@ -132,31 +129,30 @@ QByteArray Encryption::encrypted(QString document, QString password)
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len;
 
-    unsigned int Salt[] = {12345, 54321};
-    unsigned char *KeyData;
-    int KeyDataLen;
+    unsigned int salt[] = {12345, 54321};
+    unsigned char *keyData, *docData;
+    int keyDataLen, docDataLen;
 
-    char *msgtoencrypt = (char *)document.toLatin1().constData();
-
-    KeyData = (unsigned char *)password.toLatin1().constData();
-    KeyDataLen = password.length();
+    docData = (unsigned char *)document.toLatin1().constData();
+    docDataLen = document.length() + 1; // +1 for \0
+    keyData = (unsigned char *)password.toLatin1().constData();
+    keyDataLen = password.length();
 
     EVP_DigestInit(&mdctx, EVP_md5());
-    EVP_DigestUpdate(&mdctx, KeyData, (size_t) KeyDataLen);
+    EVP_DigestUpdate(&mdctx, keyData, (size_t) keyDataLen);
     EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
     EVP_MD_CTX_cleanup(&mdctx);
 
-    INITIALIZEAES(KeyData, KeyDataLen, (unsigned char *)&Salt, &en_ctx, &de_ctx);
+    INITIALIZEAES(keyData, keyDataLen, (unsigned char *)&salt, &en_ctx, &de_ctx);
 
-    unsigned char *ciphermsg;
-    int outlen, inlen;
-
-    outlen = inlen = strlen(msgtoencrypt)+1;
-
-    ciphermsg = Encrypt(&en_ctx, (unsigned char *)msgtoencrypt, &inlen);
+    unsigned char * ciphermsg = Encrypt(&en_ctx, docData, &docDataLen);
 
     QByteArray out;
-    out.append((char *)ciphermsg);
+    out.append((char *)ciphermsg, docDataLen);
     out.append((char *)md_value);
+
+    EVP_CIPHER_CTX_cleanup(&en_ctx);
+    EVP_CIPHER_CTX_cleanup(&de_ctx);
+
     return out;
 }

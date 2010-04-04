@@ -21,10 +21,13 @@ HEADERS += MainWindow.h \
     PasswordInputDialog.h \
     Encryption.h \
     PasswordStrengthWidget.h \
-    FlatButton.h
+    FlatButton.h \
+    ../../../../MinGW/include/openssl/evp.h \
+    ../../../../MinGW/include/openssl/md5.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \
     ChangePasswordDialog.ui \
     PasswordInputDialog.ui
 RESOURCES += resources.qrc
+LIBS += "C:\MinGW\lib\libeay32.dll.a"

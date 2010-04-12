@@ -1,12 +1,14 @@
 #include "PasswordInputDialog.h"
 #include "ui_PasswordInputDialog.h"
 
+#include <QFileInfo>
+
 PasswordInputDialog::PasswordInputDialog(QString filename, QWidget *parent) :
     QDialog(parent),
     m_ui(new Ui::PasswordInputDialog)
 {
     m_ui->setupUi(this);
-    m_ui->lblFile->setText(tr("File: ") + filename);
+    m_ui->lblFile->setText(tr("File: ") + QFileInfo(filename).completeBaseName());
 }
 
 PasswordInputDialog::~PasswordInputDialog()

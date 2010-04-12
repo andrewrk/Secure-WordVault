@@ -158,7 +158,7 @@ bool MainWindow::guiOpen(QString targetExe)
     } else {
         // prompt for password and decrypt
         while(true) {
-            PasswordInputDialog dialog(QFileInfo(m_targetExe).baseName(), this);
+            PasswordInputDialog dialog(targetExe, this);
             if (dialog.exec() == QDialog::Rejected)
                 return false; // user cancel
             QString password = dialog.password();
@@ -342,7 +342,7 @@ void MainWindow::updateCaption()
     if (m_targetExe.isNull())
         title = tr("Unsaved");
     else
-        title = QFileInfo(m_targetExe).baseName();
+        title = QFileInfo(m_targetExe).completeBaseName();
 
     this->setWindowTitle(title + tainted + QString(" - ") + QApplication::applicationName());
 }

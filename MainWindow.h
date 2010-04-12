@@ -58,6 +58,9 @@ private: //variables
     QColor m_defaultHilightColor;
     QColor m_defaultHilightTextColor;
 
+    // whether the cursor was last moved by user or find function.
+    bool m_manuallyMovedCursor;
+
 private: //methods
     // prompts the user to save if necessary. Returns true if they did not
     // press Cancel
@@ -100,6 +103,8 @@ private: //methods
     void showReplaceGui();
 
 private slots:
+    void on_txtDocument_selectionChanged();
+    void on_txtDocument_cursorPositionChanged();
     void on_actionFont_triggered();
     void on_actionReplace_triggered();
     void on_actionFindNext_triggered();

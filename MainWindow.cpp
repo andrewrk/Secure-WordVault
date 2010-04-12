@@ -33,7 +33,8 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_replaceLabel(NULL),
     m_replaceLabelAction(NULL),
     m_lastSearchFound(true),
-    m_findFlags((QTextDocument::FindFlag) 0)
+    m_findFlags((QTextDocument::FindFlag) 0),
+    m_manuallyMovedCursor(true)
 {
     m_ui->setupUi(this);
 
@@ -199,12 +200,12 @@ void MainWindow::updateGui()
 
     // color the search hilighted text yellow if found
     pal = m_ui->txtDocument->palette();
-    if (m_ui->findBar->isVisible() && ! m_txtFind->text().isEmpty()) {
+    if (m_ui->findBar->isVisible() && ! m_txtFind->text().isEmpty() && ! m_manuallyMovedCursor) {
         pal.setColor(QPalette::Highlight, Qt::yellow);
         pal.setColor(QPalette::HighlightedText, Qt::black);
     } else {
-        pal.setColor(QPalette::Highlight, m_defaultHilightColor);
-        pal.setColor(QPalette::HighlightedText, m_defaultHilightTextColor);
+        pal.setColor(QPalette::Highlight, Qt::darkBlue); // if only m_defaultHilightColor would work.
+        pal.setColor(QPalette::HighlightedText, Qt::white); // if only m_defaultHilightTextColor would work.
     }
     m_ui->txtDocument->setPalette(pal);
 
@@ -527,6 +528,7 @@ void MainWindow::findText(QTextDocument::FindFlag flags)
     }
 
     m_lastSearchFound = found;
+    m_manuallyMovedCursor = false;
     updateGui();
 }
 
@@ -549,4 +551,16 @@ void MainWindow::on_actionReplace_triggered()
 void MainWindow::on_actionFont_triggered()
 {
     m_ui->txtDocument->setFont(QFontDialog::getFont(NULL, m_ui->txtDocument->font(), this));
+}
+
+void MainWindow::on_txtDocument_cursorPositionChanged()
+{
+    m_manuallyMovedCursor = true;
+    updateGui();
+}
+
+void MainWindow::on_txtDocument_selectionChanged()
+{
+    m_manuallyMovedCursor = true;
+    updateGui();
 }

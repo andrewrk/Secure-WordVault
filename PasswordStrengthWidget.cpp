@@ -52,6 +52,10 @@ void PasswordStrengthWidget::paintEvent(QPaintEvent *)
     if (index >= colors.size())
         index = colors.size()-1;
 
+    // make sure the bar goes all the way to the right for the strongest password
+    if (index == colors.size() - 1)
+        m_strength = 1.0f;
+
     p.setPen(QPen(Qt::black, 1));
     p.setBrush(colors.at(index));
     p.fillRect(0, 0, (int) (m_strength * width()), height(), QBrush(colors.at(index), Qt::SolidPattern));

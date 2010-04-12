@@ -204,7 +204,7 @@ void MainWindow::updateGui()
         pal.setColor(QPalette::Highlight, Qt::yellow);
         pal.setColor(QPalette::HighlightedText, Qt::black);
     } else {
-        pal.setColor(QPalette::Highlight, Qt::darkBlue); // if only m_defaultHilightColor would work.
+        pal.setColor(QPalette::Highlight, QColor(51, 133, 255)); // if only m_defaultHilightColor would work.
         pal.setColor(QPalette::HighlightedText, Qt::white); // if only m_defaultHilightTextColor would work.
     }
     m_ui->txtDocument->setPalette(pal);

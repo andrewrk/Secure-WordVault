@@ -90,13 +90,14 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
     m_ui->findBar->addWidget(caseSensitive);
 
-
-
     // determine the default hilight palette colors
     QPalette palette = m_ui->txtDocument->palette();
     m_defaultHilightColor = palette.color(QPalette::Highlight);
     m_defaultHilightTextColor = palette.color(QPalette::HighlightedText);
 
+    // jump the gun
+    showFindGui();
+    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
 
     // open the file that was passed in
     if (targetExe.isNull()) {
@@ -148,12 +149,14 @@ void MainWindow::hideFindBar()
     updateGui();
 }
 
+QString MainWindow::boolSerializer(bool bl)
+{
+    return bl ? QString("true") : QString("false");
+}
+
 bool MainWindow::boolDeserializer(QString str)
 {
-    if(str == "1")
-        return true;
-    else
-        return false;
+    return str == "true";
 }
 
 bool MainWindow::guiOpen(QString targetExe)
@@ -186,14 +189,14 @@ bool MainWindow::guiOpen(QString targetExe)
 
                 // Set findbar visibility
                 QString findBarState = data.takeFirst();
-                if(findBarState != "none")
-                {
-                    // Search or Replace must be true
+                if (findBarState == "replace") {
+                    showReplaceGui();
+                    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+                } else if (findBarState == "find") {
                     showFindGui();
                     m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
-
-                    if(findBarState == "replace")
-                        showReplaceGui();
+                } else {
+                    hideFindBar();
                 }
 
                 // Set wordwrap
@@ -202,7 +205,7 @@ bool MainWindow::guiOpen(QString targetExe)
 
                 // Set document text
                 QString document = data.join("\n");
-                m_ui->txtDocument->setPlainText(text);
+                m_ui->txtDocument->setPlainText(document);
 
                 break;
             } else {
@@ -325,15 +328,16 @@ bool MainWindow::guiSave()
 
 void MainWindow::save()
 {
-
-
-    // Append settings to document
+    // Prepend settings to document
     QString fontString    = m_ui->txtDocument->font().toString();
     QString findBarState  = QString("\n") + getFindBarState();
-    QString wordWrapState = QString("\n") + m_ui->actionWordWrap->isChecked();
+    QString wordWrapState = QString("\n") + boolSerializer(m_ui->actionWordWrap->isChecked());
     QString data          = QString("\n") + m_ui->txtDocument->toPlainText();
     QString document      = QString();
-    document.append(fontString).append(findBarState).append(wordWrapState).append(data);
+    document.append(fontString);
+    document.append(findBarState);
+    document.append(wordWrapState);
+    document.append(data);
 
     ExeParser::write(m_targetExe, Encryption::encrypted(document, m_password));
 
@@ -387,6 +391,11 @@ bool MainWindow::guiSaveAs()
 
 void MainWindow::on_txtDocument_textChanged()
 {
+    taint();
+}
+
+void MainWindow::taint()
+{
     m_tainted = true;
     updateCaption();
 }
@@ -433,6 +442,7 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionWordWrap_toggled(bool )
 {
+    taint();
     updateGui();
 }
 
@@ -607,6 +617,7 @@ void MainWindow::on_actionReplace_triggered()
 void MainWindow::on_actionFont_triggered()
 {
     m_ui->txtDocument->setFont(QFontDialog::getFont(NULL, m_ui->txtDocument->font(), this));
+    taint();
 }
 
 void MainWindow::on_txtDocument_cursorPositionChanged()

@@ -18,7 +18,7 @@ public:
 
 protected:
     void changeEvent(QEvent * e);
-    void closeEvent(QCloseEvent * e);
+    void closeEvent(QCloseEvent * e);;
     void keyPressEvent(QKeyEvent * e);
 
 private: //variables
@@ -105,8 +105,13 @@ private: //methods
     // Get the find state of the find/replace bar
     QString getFindBarState();
 
+
     // bool deserializer
+    QString boolSerializer(bool bl);
     bool boolDeserializer(QString str);
+
+    // flag the document as having unsaved changes
+    void taint();
 
 private slots:
     void on_txtDocument_selectionChanged();

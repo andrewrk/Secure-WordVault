@@ -1,6 +1,8 @@
 #include "ChangePasswordDialog.h"
 #include "ui_ChangePasswordDialog.h"
 
+#include "ConfirmNoPasswordDialog.h"
+
 #include <QMessageBox>
 
 ChangePasswordDialog::ChangePasswordDialog(QString oldPassword, QWidget *parent) :
@@ -31,6 +33,22 @@ void ChangePasswordDialog::changeEvent(QEvent *e)
 
 void ChangePasswordDialog::on_buttonBox_accepted()
 {
+    // check if password is blank
+    if (m_ui->txtNewPassword->text().isEmpty()) {
+        ConfirmNoPasswordDialog dialog(this);
+        if (dialog.exec() == QDialog::Accepted) {
+            if (dialog.returnState() == ConfirmNoPasswordDialog::ChoosePassword) {
+                m_ui->txtNewPassword->setFocus(Qt::OtherFocusReason);
+                return;
+            } else if (dialog.returnState() == ConfirmNoPasswordDialog::SaveWithoutPassword) {
+                // take no action here
+            }
+        } else {
+            reject();
+            return;
+        }
+    }
+
     // make sure old password matches
     if (m_oldPassword != m_ui->txtOldPassword->text()) {
         QMessageBox::warning(this, QApplication::applicationName(),

@@ -164,7 +164,8 @@ bool MainWindow::guiOpen(QString targetExe)
     QByteArray doc = ExeParser::read(targetExe);
     if (doc.isEmpty()) {
         // new document
-        m_ui->txtDocument->setPlainText("");
+        guiNew();
+        return true;
     } else {
         // prompt for password and decrypt
         while(true) {
@@ -177,8 +178,8 @@ bool MainWindow::guiOpen(QString targetExe)
             QString text = Encryption::decrypted(doc, password, &ok);
             if (ok) {
                 m_password = password;
-                // Parse out the settings
 
+                // Parse out the settings
                 QStringList data = text.split("\n");
 
                 // Set font setting

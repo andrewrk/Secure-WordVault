@@ -90,9 +90,7 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
     m_ui->findBar->addWidget(caseSensitive);
 
-    // jump the gun
-    showFindGui();
-    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+
 
     // determine the default hilight palette colors
     QPalette palette = m_ui->txtDocument->palette();
@@ -150,6 +148,14 @@ void MainWindow::hideFindBar()
     updateGui();
 }
 
+bool MainWindow::boolDeserializer(QString str)
+{
+    if(str == "1")
+        return true;
+    else
+        return false;
+}
+
 bool MainWindow::guiOpen(QString targetExe)
 {
     QByteArray doc = ExeParser::read(targetExe);
@@ -168,7 +174,36 @@ bool MainWindow::guiOpen(QString targetExe)
             QString text = Encryption::decrypted(doc, password, &ok);
             if (ok) {
                 m_password = password;
+                // Parse out the settings
+
+                QStringList data = text.split("\n");
+
+                // Set font setting
+                QString fontString = data.takeFirst();
+                QFont font;
+                font.fromString(fontString);
+                m_ui->txtDocument->setFont(font);
+
+                // Set findbar visibility
+                QString findBarState = data.takeFirst();
+                if(findBarState != "none")
+                {
+                    // Search or Replace must be true
+                    showFindGui();
+                    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
+
+                    if(findBarState == "replace")
+                        showReplaceGui();
+                }
+
+                // Set wordwrap
+                bool wordWrapState = boolDeserializer(data.takeFirst());
+                m_ui->actionWordWrap->setChecked(wordWrapState);
+
+                // Set document text
+                QString document = data.join("\n");
                 m_ui->txtDocument->setPlainText(text);
+
                 break;
             } else {
                 QMessageBox::warning(this, QApplication::applicationName(),
@@ -290,10 +325,30 @@ bool MainWindow::guiSave()
 
 void MainWindow::save()
 {
-    ExeParser::write(m_targetExe, Encryption::encrypted(m_ui->txtDocument->toPlainText(), m_password));
+
+
+    // Append settings to document
+    QString fontString    = m_ui->txtDocument->font().toString();
+    QString findBarState  = QString("\n") + getFindBarState();
+    QString wordWrapState = QString("\n") + m_ui->actionWordWrap->isChecked();
+    QString data          = QString("\n") + m_ui->txtDocument->toPlainText();
+    QString document      = QString("\n").append(fontString).append(findBarState).append(wordWrapState).append(data);
+
+    ExeParser::write(m_targetExe, Encryption::encrypted(document, m_password));
 
     m_tainted = false;
     updateGui();
+}
+
+QString MainWindow::getFindBarState()
+{
+    if(m_ui->findBar->isVisible())
+        if(m_txtReplaceAction->isVisible())
+            return "replace";
+        else
+            return "search";
+    else
+        return "none";
 }
 
 bool MainWindow::ensurePassword()

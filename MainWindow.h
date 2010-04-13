@@ -102,6 +102,12 @@ private: //methods
     void showFindGui();
     void showReplaceGui();
 
+    // Get the find state of the find/replace bar
+    QString getFindBarState();
+
+    // bool deserializer
+    bool boolDeserializer(QString str);
+
 private slots:
     void on_txtDocument_selectionChanged();
     void on_txtDocument_cursorPositionChanged();

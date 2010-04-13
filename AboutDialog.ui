@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>525</width>
-    <height>300</height>
+    <height>208</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>50</y>
      <width>500</width>
-     <height>191</height>
+     <height>120</height>
     </rect>
    </property>
    <property name="text">
@@ -44,7 +44,7 @@ Uses OpenSSL 0.9.8</string>
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>381</width>
+     <width>505</width>
      <height>31</height>
     </rect>
    </property>
@@ -64,7 +64,7 @@ Uses OpenSSL 0.9.8</string>
    <property name="geometry">
     <rect>
      <x>425</x>
-     <y>260</y>
+     <y>170</y>
      <width>90</width>
      <height>28</height>
     </rect>

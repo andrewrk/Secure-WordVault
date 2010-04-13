@@ -62,7 +62,7 @@ QString getTargetExe() {
 QString copySelfToTemp() {
     QString selfPath = QApplication::applicationFilePath();
 
-    QString tempTitle = QApplication::applicationName() + QString(".exe");
+    QString tempTitle = QApplication::applicationName() + QString("-") + QString(QApplication::applicationVersion()) + QString(".exe");
     QString tempPath = QDir::temp().absoluteFilePath(tempTitle);
 
     ExeParser::copyOnlyExe(selfPath, tempPath);

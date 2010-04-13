@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     PasswordInputDialog.cpp \
     Encryption.cpp \
     PasswordStrengthWidget.cpp \
-    FlatButton.cpp
+    FlatButton.cpp \
+    ConfirmNoPasswordDialog.cpp
 HEADERS += MainWindow.h \
     ExeParser.h \
     NewPasswordDialog.h \
@@ -23,11 +24,13 @@ HEADERS += MainWindow.h \
     PasswordStrengthWidget.h \
     FlatButton.h \
     openssl/evp.h \
-    openssl/md5.h
+    openssl/md5.h \
+    ConfirmNoPasswordDialog.h
 FORMS += MainWindow.ui \
     NewPasswordDialog.ui \
     AboutDialog.ui \
     ChangePasswordDialog.ui \
-    PasswordInputDialog.ui
+    PasswordInputDialog.ui \
+    ConfirmNoPasswordDialog.ui
 RESOURCES += resources.qrc
 LIBS += "openssl-0.9.8n-lib/lib/libcrypto.a"

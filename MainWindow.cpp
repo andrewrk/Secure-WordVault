@@ -46,7 +46,7 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 
     // set up the search bar
     // close box
-    m_ui->findBar->addAction("X", this, SLOT(hideFindBar()));
+    m_ui->findBar->addAction(QIcon(":/icons/WindowClose.png"), QString(), this, SLOT(hideFindBar()));
 
     // "Find:" label
     QLabel * findLabel = new QLabel(tr("Find:"), m_ui->findBar);

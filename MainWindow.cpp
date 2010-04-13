@@ -46,7 +46,7 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
 
     // set up the search bar
     // close box
-    m_ui->findBar->addAction(QIcon(":/icons/WindowClose.png"), QString(), this, SLOT(hideFindBar()));
+    m_ui->findBar->addAction("X", this, SLOT(hideFindBar()));
 
     // "Find:" label
     QLabel * findLabel = new QLabel(tr("Find:"), m_ui->findBar);
@@ -332,7 +332,8 @@ void MainWindow::save()
     QString findBarState  = QString("\n") + getFindBarState();
     QString wordWrapState = QString("\n") + m_ui->actionWordWrap->isChecked();
     QString data          = QString("\n") + m_ui->txtDocument->toPlainText();
-    QString document      = QString("\n").append(fontString).append(findBarState).append(wordWrapState).append(data);
+    QString document      = QString();
+    document.append(fontString).append(findBarState).append(wordWrapState).append(data);
 
     ExeParser::write(m_targetExe, Encryption::encrypted(document, m_password));
 

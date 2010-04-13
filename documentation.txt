@@ -4,28 +4,53 @@ Copyright 2010 Albert Wolfe <albert@laowaichinese.net>
 
 How Do I Use Secure WordVault?
 
-Double click on Secure WordVault files to open them. No installation is necessary and you can open Secure WordVault files on any computer running Windows XP or later. Secure WordVault files have a ".exe" file extension because each file contains both the encrypted text in the document and the Secure WordVault executable program that runs when you double click the files.
+Double click on Secure WordVault files to open them. No installation is
+necessary and you can open Secure WordVault files on any computer running
+Windows XP or later. Secure WordVault files have a ".exe" file extension because
+each file contains both the encrypted text in the document and the Secure
+WordVault executable program that runs when you double click the files.
 
-Secure WordVault is a text editor just like Microsoft Notepad. The menus should be familiar and easy to use.
+Secure WordVault is a text editor just like Microsoft Notepad. The menus should
+be familiar and easy to use.
 
-You choose a password the first time you save a new file, and you can change the password at any time after than with the "File" -> "Change Password..." menu option.
+You choose a password the first time you save a new file, and you can change the
+password at any time after than with the "File" -> "Change Password..." menu
+option.
 
 
 What can Secure WordVault do?
 
-Secure WordVault is an editor for encrypted plain text. That means there is no formatting stored in documents you create. (You can change the font that Secure WordVault uses to display text in "Format" -> "Font...".)
+Secure WordVault is an editor for encrypted plain text. That means there is no
+formatting stored in documents you create. (You can change the font that Secure
+WordVault uses to display text in "Format" -> "Font...".)
 
 Secure WordVault runs in any Windows XP or later operating system.
 
 
 Secure WordVault is open source. How does that affect security?
 
-Secure WordVault uses 256-bit AES encryption which, coincidentally, the US government has approved for the encryption of top secret information[1]. It's no secret that Secure WordVault uses this encryption algorithm, because the real security of the encryption lies in the strength of the password you chose for your document. The only way to hack into a document encrypted with AES encryption is to guess the password (or guess a random password that also happens to work, but that's extremely unlikely). The harder a password is to guess, the stronger the password is. The strongest passwords are just a string of random letters, numbers, and symbols, the longer the better.
+Secure WordVault uses 256-bit AES encryption which, coincidentally, the US
+government has approved for the encryption of top secret information[1]. It's no
+secret that Secure WordVault uses this encryption algorithm, because the real 
+security of the encryption lies in the strength of the password you chose for
+your document. The only way to hack into a document encrypted with AES
+encryption is to guess the password (or guess a random password that also
+happens to work, but that's extremely unlikely). The harder a password is to
+guess, the stronger the password is. The strongest passwords are just a string
+of random letters, numbers, and symbols, the longer the better.
 
 
 How does Secure WordVault work?
 
-Secure WordVault documents contain the executable code for running the program so that when you double click a Secure WordVault document, Windows runs the program instead of trying to open the file with a different program. The encrypted document data is stored inside the exe file. When it comes time to save a document, it turns out that it's impossible to write to a file that's currently executing in Windows. For this reason, Secure WordVault copies the program code (not the encrypted data) to a temporary location and runs that instead of the actual document file. That way the document file is available to be overwritten when the time comes.
+Secure WordVault documents contain the executable code for running the program
+so that when you double click a Secure WordVault document, Windows runs the
+program instead of trying to open the file with a different program. The
+encrypted document data is stored inside the exe file. When it comes time to
+save a document, it turns out that it's impossible to write to a file that's
+currently executing in Windows. For this reason, Secure WordVault copies the
+program code (not the encrypted data) to a temporary location and runs that
+instead of the actual document file. That way the document file is available to
+be overwritten when the time comes.
 
 
 How does the password strength meter work?
@@ -59,5 +84,8 @@ An example of a 100 point password would be "aaA123~!"
 
 
 
-[1] Lynn Hathaway (June 2003). "National Policy on the Use of the Advanced Encryption Standard (AES) to Protect National Security Systems and National Security Information" <http://www.cnss.gov/Assets/pdf/cnssp_15_fs.pdf>. Retrieved 2008-11-02.
+[1] Lynn Hathaway (June 2003). "National Policy on the Use of the Advanced
+Encryption Standard (AES) to Protect National Security Systems and National
+Security Information" <http://www.cnss.gov/Assets/pdf/cnssp_15_fs.pdf>.
+Retrieved 2008-11-02.
 

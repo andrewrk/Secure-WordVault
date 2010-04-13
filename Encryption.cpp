@@ -93,7 +93,7 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     int keyDataLen, docDataLen;
 
     keyData = (unsigned char *)password.toLatin1().constData();
-    keyDataLen = password.length();
+    keyDataLen = password.length() + 1;
     docData = (unsigned char *)document.constData();
     docDataLen = document.length();
 
@@ -136,7 +136,7 @@ QByteArray Encryption::encrypted(QString document, QString password)
     docData = (unsigned char *)document.toLatin1().constData();
     docDataLen = document.length() + 1; // +1 for \0
     keyData = (unsigned char *)password.toLatin1().constData();
-    keyDataLen = password.length();
+    keyDataLen = password.length() + 1;
 
     EVP_DigestInit(&mdctx, EVP_md5());
     EVP_DigestUpdate(&mdctx, keyData, (size_t) keyDataLen);

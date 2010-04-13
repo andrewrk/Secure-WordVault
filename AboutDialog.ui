@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>525</width>
     <height>300</height>
    </rect>
   </property>
@@ -18,12 +18,19 @@
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>371</width>
+     <width>500</width>
      <height>191</height>
     </rect>
    </property>
    <property name="text">
-    <string>TODO: about text</string>
+    <string>Copryright 2010 Albert Wolfe &lt;albert@laowaichinese.net&gt;
+
+source code: http://github.com/superjoe30/Secure-WordVault
+documentation: http://github.com/superjoe30/Secure-WordVault/raw/master/documentation.txt
+
+Uses Qt 4.6.2 (32 bit)
+
+Uses OpenSSL 0.9.8</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -47,7 +54,7 @@
     </font>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>Secure WordVault</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -56,9 +63,9 @@
   <widget class="QPushButton" name="btnOk">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>425</x>
      <y>260</y>
-     <width>92</width>
+     <width>90</width>
      <height>28</height>
     </rect>
    </property>

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(QObject::tr("Lao Wai Chinese"));
     QCoreApplication::setOrganizationDomain("laowaichinese.net");
     QCoreApplication::setApplicationName(QObject::tr("Secure WordVault"));
-    QCoreApplication::setApplicationVersion("0.1.1");
+    QCoreApplication::setApplicationVersion("0.1.2");
 
     // determine whether to run or copy ourself to temp and run that
     QString targetExe = getTargetExe();

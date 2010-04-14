@@ -102,7 +102,7 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
     EVP_MD_CTX_cleanup(&mdctx);
 
-    memmove(stored_md_value, docData + docDataLen - 1 - md_len, md_len);
+    memmove(stored_md_value, docData + docDataLen - md_len, md_len);
     docDataLen -= md_len;
 
     *ok = true;
@@ -149,7 +149,7 @@ QByteArray Encryption::encrypted(QString document, QString password)
 
     QByteArray out;
     out.append((char *)ciphermsg, docDataLen);
-    out.append((char *)md_value);
+    out.append((char *)md_value, md_len);
 
     EVP_CIPHER_CTX_cleanup(&en_ctx);
     EVP_CIPHER_CTX_cleanup(&de_ctx);

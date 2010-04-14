@@ -34,3 +34,4 @@ FORMS += MainWindow.ui \
     ConfirmNoPasswordDialog.ui
 RESOURCES += resources.qrc
 LIBS += "openssl-0.9.8n-lib/lib/libcrypto.a"
+RC_FILE = securenotepad.rc

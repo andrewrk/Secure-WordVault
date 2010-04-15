@@ -3,5 +3,6 @@
         <file>GoToNextHS.png</file>
         <file>GoToPrevious.png</file>
         <file>WindowClose.png</file>
+        <file>icon-source.png</file>
     </qresource>
 </RCC>

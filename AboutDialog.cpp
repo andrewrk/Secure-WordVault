@@ -7,8 +7,17 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    m_ui->lblAbout->setText(QApplication::applicationName() + QString(" ") + QApplication::applicationVersion());
+    m_ui->lblAbout->setText(QString("About ") + QApplication::applicationName() + QString(" ") + QApplication::applicationVersion());
     this->setWindowTitle(m_ui->lblAbout->text());
+
+    QIcon icon = windowIcon();
+    Qt::WindowFlags flags = windowFlags();
+    Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
+    flags = flags & (~helpFlag);
+    setWindowFlags(flags);
+    setWindowIcon(icon);
+
+    m_ui->btnOk->setFocus(Qt::OtherFocusReason);
 }
 
 AboutDialog::~AboutDialog()

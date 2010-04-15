@@ -88,7 +88,7 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     unsigned char md_value[EVP_MAX_MD_SIZE], stored_md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len;
 
-    unsigned int salt[] = {12345, 54321};
+    unsigned char salt[] = {164, 97, 77, 154, 49, 44, 221, 20, 91, 107, 83, 98, 60, 8, 172, 160};
     unsigned char *keyData, *docData;
     int keyDataLen, docDataLen;
 
@@ -131,7 +131,7 @@ QByteArray Encryption::encrypted(QString document, QString password)
     unsigned char md_value[EVP_MAX_MD_SIZE];
     unsigned int md_len;
 
-    unsigned int salt[] = {12345, 54321};
+    unsigned char salt[] = {164, 97, 77, 154, 49, 44, 221, 20, 91, 107, 83, 98, 60, 8, 172, 160};
     unsigned char *keyData, *docData;
     int keyDataLen, docDataLen;
 

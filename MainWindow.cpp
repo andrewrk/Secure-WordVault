@@ -211,7 +211,7 @@ bool MainWindow::guiOpen(QString targetExe)
                 break;
             } else {
                 QMessageBox::warning(this, QApplication::applicationName(),
-                    tr("Invalid password."));
+                    tr("Sorry, wrong password.\n\n(Make sure your CAPS lock is off and try again)."));
             }
         }
     }

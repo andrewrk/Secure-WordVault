@@ -193,7 +193,7 @@ bool MainWindow::guiOpen(QString targetExe)
                 if (findBarState == "replace") {
                     showReplaceGui();
                     m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
-                } else if (findBarState == "find") {
+                } else if (findBarState == "search") {
                     showFindGui();
                     m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
                 } else {

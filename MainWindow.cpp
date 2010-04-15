@@ -216,6 +216,9 @@ bool MainWindow::guiOpen(QString targetExe)
         }
     }
 
+    m_ui->actionUndo->setEnabled(false);
+    m_ui->actionRedo->setEnabled(false);
+
     m_targetExe = targetExe;
     m_tainted = false;
     updateGui();
@@ -428,6 +431,9 @@ bool MainWindow::guiNew()
 {
     if (! ensureSaved())
         return false;
+
+    m_ui->actionUndo->setEnabled(false);
+    m_ui->actionRedo->setEnabled(false);
 
     m_targetExe = QString();
     m_ui->txtDocument->setPlainText("");

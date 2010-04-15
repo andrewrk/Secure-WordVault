@@ -4,7 +4,7 @@
 #include <QFileInfo>
 
 PasswordInputDialog::PasswordInputDialog(QString filename, QWidget *parent) :
-    QDialog(parent),
+    QDialog(),
     m_ui(new Ui::PasswordInputDialog)
 {
     m_ui->setupUi(this);

@@ -106,8 +106,10 @@ QString Encryption::decrypted(QByteArray document, QString password, bool *ok)
     docDataLen -= md_len;
 
     *ok = true;
-    if (memcmp(stored_md_value, md_value, md_len))
+    if (memcmp(stored_md_value, md_value, md_len)) {
         *ok = false;
+        return QString("");
+    }
 
     INITIALIZEAES(keyData, keyDataLen, (unsigned char *)&salt, &en_ctx, &de_ctx);
 

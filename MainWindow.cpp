@@ -512,7 +512,6 @@ void MainWindow::showFindGui()
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
 
     m_txtFind->setFocus(Qt::OtherFocusReason);
-    m_txtFind->selectAll();
 
     updateGui();
 }

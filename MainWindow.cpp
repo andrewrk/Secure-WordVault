@@ -438,6 +438,7 @@ bool MainWindow::guiNew()
     m_targetExe = QString();
     m_ui->txtDocument->setPlainText("");
     m_tainted = false;
+    hideFindBar();
     updateGui();
     return true;
 }

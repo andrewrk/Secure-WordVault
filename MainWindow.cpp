@@ -383,7 +383,7 @@ bool MainWindow::guiSaveAs()
 
     // prompt for a location to save the new file
     QString file = QFileDialog::getSaveFileName(this, tr("Save As"),
-        QFileInfo(m_targetExe).absoluteDir().path(), tr("Application (*.exe)"));
+        QFileInfo(m_targetExe).absoluteDir().path(), tr("Secure WordVault Document (*.exe)"));
     if (file.isNull())
         return false; // pressed cancel
     m_targetExe = file;

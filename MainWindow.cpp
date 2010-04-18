@@ -308,7 +308,7 @@ bool MainWindow::ensureSaved()
             QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
             QMessageBox::Save);
         if (response == QMessageBox::Save)
-            guiSave();
+            return guiSave();
         return response != QMessageBox::Cancel;
     } else {
         return true;

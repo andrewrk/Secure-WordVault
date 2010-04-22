@@ -16,8 +16,10 @@ you can use any OS.
     this step will take minutes
 8.  mingw32-make
     this step will take hours
-9.  build the application in qt creator in release mode
-10. strip -s securenotepad.exe
-11. upx -9 securenotepad.exe
+
+9.  Update the application version information in main.cpp.
+10. build the application in qt creator in release mode
+11. strip -s securenotepad.exe
+12. upx -9 securenotepad.exe
     You can find upx at http://upx.sourceforge.net/
 

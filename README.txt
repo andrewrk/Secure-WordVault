@@ -11,6 +11,8 @@ you can use any OS.
 4.  Add MinGW bin folder to PATH.
 5.  Edit %qtdir%/mkspecs/win32-g++/qmake.conf
     Prefix -static to QMAKE_LFLAGS
+    It should now read:
+    QMAKE_LFLAGS = -static -enable-stdcall-fixup -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc
 6.  cd %qtdir%
 7.  configure -static -release -no-exceptions
     this step will take minutes

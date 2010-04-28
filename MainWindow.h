@@ -38,12 +38,6 @@ private: //variables
     // the find text box in the find tool bar
     QLineEdit * m_txtFind;
     QAction * m_txtFindAction;
-    QLineEdit * m_txtReplace;
-    QAction * m_txtReplaceAction;
-    QLabel * m_replaceLabel;
-    QAction * m_replaceLabelAction;
-    QAction * m_replaceNextAction;
-    QAction * m_replacePreviousAction;
 
     // true if the last search the user did found something
     bool m_lastSearchFound;
@@ -98,11 +92,10 @@ private: //methods
     // find forward or backward depending on flags
     void findText(QTextDocument::FindFlag flags);
 
-    // show the find or replace gui panel
+    // show the find gui panel
     void showFindGui();
-    void showReplaceGui();
 
-    // Get the find state of the find/replace bar
+    // Get the find state of the find bar
     QString getFindBarState();
 
 
@@ -117,7 +110,6 @@ private slots:
     void on_txtDocument_selectionChanged();
     void on_txtDocument_cursorPositionChanged();
     void on_actionFont_triggered();
-    void on_actionReplace_triggered();
     void on_actionFindNext_triggered();
     void on_actionFind_triggered();
     void on_actionChangePassword_triggered();
@@ -142,8 +134,6 @@ private slots:
     // select and scroll to the next instance of the search text
     void guiFindNext();
     void guiFindPrevious();
-    void guiReplaceNext();
-    void guiReplacePrevious();
 
     // respond to a change in the search text. If the current match can be
     // expanded, do it. otherwise find next.

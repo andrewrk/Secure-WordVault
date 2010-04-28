@@ -28,10 +28,6 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_targetExe(QString()),
     m_txtFind(NULL),
     m_txtFindAction(NULL),
-    m_txtReplace(NULL),
-    m_txtReplaceAction(NULL),
-    m_replaceLabel(NULL),
-    m_replaceLabelAction(NULL),
     m_lastSearchFound(true),
     m_findFlags((QTextDocument::FindFlag) 0),
     m_manuallyMovedCursor(true)
@@ -64,21 +60,6 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     // find next and previous buttons
     m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiFindPrevious()));
     m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiFindNext()));
-
-    // replace label
-    m_replaceLabel = new QLabel(tr("Replace With:"), m_ui->findBar);
-    m_replaceLabelAction = m_ui->findBar->addWidget(m_replaceLabel);
-
-    // replace text box
-    m_txtReplace = new QLineEdit(m_ui->findBar);
-    m_txtReplace->setMaximumWidth(200);
-    m_txtReplace->setMinimumWidth(50);
-    connect(m_txtReplace, SIGNAL(returnPressed()), this, SLOT(guiReplaceNext()));
-    m_txtReplaceAction = m_ui->findBar->addWidget(m_txtReplace);
-
-    // replace next and previous buttons
-    m_replacePreviousAction = m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiReplacePrevious()));
-    m_replaceNextAction = m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiReplaceNext()));
 
     // whole words only checkbox
     QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->findBar);
@@ -190,10 +171,7 @@ bool MainWindow::guiOpen(QString targetExe)
 
                 // Set findbar visibility
                 QString findBarState = data.takeFirst();
-                if (findBarState == "replace") {
-                    showReplaceGui();
-                    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
-                } else if (findBarState == "search") {
+                if (findBarState == "search") {
                     showFindGui();
                     m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
                 } else {
@@ -211,7 +189,7 @@ bool MainWindow::guiOpen(QString targetExe)
                 break;
             } else {
                 QMessageBox::warning(this, QApplication::applicationName(),
-                    tr("Sorry, wrong password.\n\n(Make sure your CAPS lock is off and try again)."));
+                    tr("Sorry, wrong password.\n\n(Make sure your CAPS lock is off and try again.)"));
             }
         }
     }
@@ -352,10 +330,7 @@ void MainWindow::save()
 QString MainWindow::getFindBarState()
 {
     if(m_ui->findBar->isVisible())
-        if(m_txtReplaceAction->isVisible())
-            return "replace";
-        else
-            return "search";
+        return "search";
     else
         return "none";
 }
@@ -510,35 +485,12 @@ void MainWindow::showFindGui()
 {
     m_ui->findBar->show();
 
-    m_replaceLabelAction->setVisible(false);
-    m_txtReplaceAction->setVisible(false);
-    m_replaceNextAction->setVisible(false);
-    m_replacePreviousAction->setVisible(false);
-
     if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
         m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
 
     m_txtFind->setFocus(Qt::OtherFocusReason);
     if(m_txtFind->text().size() != 0)
         m_txtFind->selectAll();
-
-    updateGui();
-}
-
-void MainWindow::showReplaceGui()
-{
-    m_ui->findBar->show();
-
-    m_replaceLabelAction->setVisible(true);
-    m_txtReplaceAction->setVisible(true);
-    m_replaceNextAction->setVisible(true);
-    m_replacePreviousAction->setVisible(true);
-
-    if (m_ui->txtDocument->textCursor().selectionStart() != m_ui->txtDocument->textCursor().selectionEnd())
-        m_txtFind->setText(m_ui->txtDocument->textCursor().selection().toPlainText());
-
-    m_txtReplace->setFocus(Qt::OtherFocusReason);
-    m_txtReplace->selectAll();
 
     updateGui();
 }
@@ -551,26 +503,6 @@ void MainWindow::on_actionFindNext_triggered()
 void MainWindow::guiFindNext()
 {
     findText((QTextDocument::FindFlag) m_findFlags);
-}
-
-void MainWindow::guiReplaceNext()
-{
-    // replace the current selection
-    if (m_ui->txtDocument->textCursor().selection().toPlainText() == m_txtFind->text())
-        m_ui->txtDocument->textCursor().insertText(m_txtReplace->text());
-
-    // find next
-    guiFindNext();
-}
-
-void MainWindow::guiReplacePrevious()
-{
-    // replace the current selection
-    if (m_ui->txtDocument->textCursor().selection().toPlainText() == m_txtFind->text())
-        m_ui->txtDocument->textCursor().insertText(m_txtReplace->text());
-
-    // find previous
-    guiFindPrevious();
 }
 
 void MainWindow::guiFindPrevious()
@@ -616,11 +548,6 @@ void MainWindow::updateSearch()
     m_ui->txtDocument->setTextCursor(cursor);
 
     guiFindNext();
-}
-
-void MainWindow::on_actionReplace_triggered()
-{
-    showReplaceGui();
 }
 
 void MainWindow::on_actionFont_triggered()

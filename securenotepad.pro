@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     ChangePasswordDialog.cpp \
     PasswordInputDialog.cpp \
     Encryption.cpp \
-    PasswordStrengthWidget.cpp \
     FlatButton.cpp \
     ConfirmNoPasswordDialog.cpp
 HEADERS += MainWindow.h \
@@ -21,7 +20,6 @@ HEADERS += MainWindow.h \
     ChangePasswordDialog.h \
     PasswordInputDialog.h \
     Encryption.h \
-    PasswordStrengthWidget.h \
     FlatButton.h \
     openssl/evp.h \
     openssl/md5.h \

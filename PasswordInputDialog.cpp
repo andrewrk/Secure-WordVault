@@ -9,7 +9,7 @@ PasswordInputDialog::PasswordInputDialog(QString filename, QWidget *parent) :
 {
     m_ui->setupUi(this);
     //m_ui->lblFile->setText(tr("File: ") + QFileInfo(filename).fileName());
-    m_ui->lblFileName->setText(QFileInfo(filename).fileName());
+    m_ui->lblFileName->setText(QFileInfo(filename).completeBaseName());
 
     QIcon icon = windowIcon();
     Qt::WindowFlags flags = windowFlags();

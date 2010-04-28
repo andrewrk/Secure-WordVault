@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QCoreApplication::setOrganizationName(QObject::tr("Lao Wai Chinese"));
-    QCoreApplication::setOrganizationDomain("laowaichinese.net");
+    QCoreApplication::setOrganizationName(QObject::tr("BluePandaTech"));
+    QCoreApplication::setOrganizationDomain("BluePandaTech.com");
     QCoreApplication::setApplicationName(QObject::tr("Secure WordVault"));
     QCoreApplication::setApplicationVersion("0.1.3");
 

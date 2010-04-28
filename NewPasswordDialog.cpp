@@ -9,7 +9,11 @@ NewPasswordDialog::NewPasswordDialog(QWidget *parent) :
     m_ui(new Ui::NewPasswordDialog)
 {
     m_ui->setupUi(this);
-    m_ui->strengthMeter->attachTo(m_ui->txtPassword);
+
+    Qt::WindowFlags flags = windowFlags();
+    Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
+    flags = flags & (~helpFlag);
+    setWindowFlags(flags);
 }
 
 NewPasswordDialog::~NewPasswordDialog()

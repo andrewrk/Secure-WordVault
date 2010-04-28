@@ -11,7 +11,6 @@ ChangePasswordDialog::ChangePasswordDialog(QString oldPassword, QWidget *parent)
     m_oldPassword(oldPassword)
 {
     m_ui->setupUi(this);
-    m_ui->strengthMeter->attachTo(m_ui->txtNewPassword);
 
     QIcon icon = windowIcon();
     Qt::WindowFlags flags = windowFlags();

@@ -464,6 +464,18 @@ void MainWindow::on_actionAbout_triggered()
     AboutDialog(this).exec();
 }
 
+void MainWindow::on_actionFAQ_triggered()
+{
+    QUrl url = QUrl::fromEncoded("http://bluepandatech.com/software/secure-wordvault#faq");
+    QDesktopServices::openUrl(url);
+}
+
+void MainWindow::on_actionInstructions_triggered()
+{
+    QUrl url = QUrl::fromEncoded("http://bluepandatech.com/software/secure-wordvault#instructions");
+    QDesktopServices::openUrl(url);
+}
+
 void MainWindow::on_actionChangePassword_triggered()
 {
     ChangePasswordDialog dialog(m_password, this);

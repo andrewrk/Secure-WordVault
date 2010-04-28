@@ -5,6 +5,8 @@
 #include <QLineEdit>
 #include <QTextDocument>
 #include <QLabel>
+#include <QDesktopServices>
+#include <QUrl>
 
 namespace Ui {
     class MainWindow;
@@ -114,6 +116,8 @@ private slots:
     void on_actionFind_triggered();
     void on_actionChangePassword_triggered();
     void on_actionAbout_triggered();
+    void on_actionFAQ_triggered();
+    void on_actionInstructions_triggered();
     void on_actionInsertDateTime_triggered();
     void on_actionPaste_triggered();
     void on_actionCopy_triggered();

@@ -85,6 +85,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionInstructions"/>
+    <addaction name="actionFAQ"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu_File"/>
@@ -282,6 +284,16 @@
    </property>
    <property name="toolTip">
     <string>Change the font of the editor</string>
+   </property>
+  </action>
+  <action name="actionFAQ">
+   <property name="text">
+    <string>FAQ</string>
+   </property>
+  </action>
+  <action name="actionInstructions">
+   <property name="text">
+    <string>Instructions</string>
    </property>
   </action>
  </widget>

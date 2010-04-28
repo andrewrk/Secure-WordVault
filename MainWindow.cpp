@@ -61,16 +61,6 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiFindPrevious()));
     m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiFindNext()));
 
-    // whole words only checkbox
-    QCheckBox * wholeWords = new QCheckBox(tr("&Whole Words Only"), m_ui->findBar);
-    connect(wholeWords, SIGNAL(toggled(bool)), this, SLOT(toggleWholeWordSearch(bool)));
-    m_ui->findBar->addWidget(wholeWords);
-
-    // case sensitive checkbox
-    QCheckBox * caseSensitive = new QCheckBox(tr("Mat&ch Case"), m_ui->findBar);
-    connect(caseSensitive, SIGNAL(toggled(bool)), this, SLOT(toggleCaseSensitiveSearch(bool)));
-    m_ui->findBar->addWidget(caseSensitive);
-
     // determine the default hilight palette colors
     QPalette palette = m_ui->txtDocument->palette();
     m_defaultHilightColor = palette.color(QPalette::Highlight);

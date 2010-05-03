@@ -20,6 +20,7 @@
 #include <QFontDialog>
 
 #include <cstdlib>
+#include <iostream>
 
 MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     QMainWindow(parent),
@@ -61,14 +62,12 @@ MainWindow::MainWindow(QString targetExe, QWidget *parent) :
     m_ui->findBar->addAction(QIcon(":/icons/GoToPrevious.png"), QString(), this, SLOT(guiFindPrevious()));
     m_ui->findBar->addAction(QIcon(":/icons/GoToNextHS.png"), QString(), this, SLOT(guiFindNext()));
 
+    hideFindBar();
+
     // determine the default hilight palette colors
     QPalette palette = m_ui->txtDocument->palette();
     m_defaultHilightColor = palette.color(QPalette::Highlight);
     m_defaultHilightTextColor = palette.color(QPalette::HighlightedText);
-
-    // jump the gun
-    showFindGui();
-    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
 
     // open the file that was passed in
     if (targetExe.isNull()) {
@@ -150,31 +149,23 @@ bool MainWindow::guiOpen(QString targetExe)
             if (ok) {
                 m_password = password;
 
+                m_ui->txtDocument->setPlainText(text);
                 // Parse out the settings
-                QStringList data = text.split("\n");
+                //QStringList data = text.split("\n");
 
                 // Set font setting
-                QString fontString = data.takeFirst();
-                QFont font;
-                font.fromString(fontString);
-                m_ui->txtDocument->setFont(font);
-
-                // Set findbar visibility
-                QString findBarState = data.takeFirst();
-                if (findBarState == "search") {
-                    showFindGui();
-                    m_ui->txtDocument->setFocus(Qt::OtherFocusReason);
-                } else {
-                    hideFindBar();
-                }
+                //QString fontString = data.takeFirst();
+                //QFont font;
+                //font.fromString(fontString);
+                //m_ui->txtDocument->setFont(font);
 
                 // Set wordwrap
-                bool wordWrapState = boolDeserializer(data.takeFirst());
-                m_ui->actionWordWrap->setChecked(wordWrapState);
+                //bool wordWrapState = boolDeserializer(data.takeFirst());
+                //m_ui->actionWordWrap->setChecked(wordWrapState);
 
                 // Set document text
-                QString document = data.join("\n");
-                m_ui->txtDocument->setPlainText(document);
+                //QString document = data.join("\n");
+                //m_ui->txtDocument->setPlainText(document);
 
                 break;
             } else {
@@ -301,15 +292,18 @@ bool MainWindow::guiSave()
 void MainWindow::save()
 {
     // Prepend settings to document
-    QString fontString    = m_ui->txtDocument->font().toString();
-    QString findBarState  = QString("\n") + getFindBarState();
-    QString wordWrapState = QString("\n") + boolSerializer(m_ui->actionWordWrap->isChecked());
-    QString data          = QString("\n") + m_ui->txtDocument->toPlainText();
-    QString document      = QString();
-    document.append(fontString);
-    document.append(findBarState);
-    document.append(wordWrapState);
-    document.append(data);
+    QString fontString = QString();
+    QString wordWrapState = QString();
+    QString data = QString();
+    QString document = QString();
+
+    fontString    = m_ui->txtDocument->font().toString();
+    wordWrapState = boolSerializer(m_ui->actionWordWrap->isChecked());
+    data          = m_ui->txtDocument->toPlainText();
+
+    document      = data;
+
+
 
     ExeParser::write(m_targetExe, Encryption::encrypted(document, m_password));
 

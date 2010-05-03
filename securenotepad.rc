@@ -10,15 +10,15 @@ FILETYPE 0x1
     {
         BLOCK "040904b0"
         {
-            VALUE "CompanyName", "Blue Panda Tech"
+            VALUE "CompanyName", "BluePandaTech"
             VALUE "FileDescription", "Secure WordVault"
             VALUE "FileVersion", "0.1.4.0"
             VALUE "InternalName", "securewordvault_exe"
-            VALUE "LegalCopyright", "Copyright (C) 2010 Blue Panda Tech."
+            VALUE "LegalCopyright", "Copyright (C) 2010 BluePandaTech."
             VALUE "OriginalFilename", "securewordvault.exe"
             VALUE "ProductName", "Secure WordVault"
             VALUE "ProductVersion", "0.1.4.0"
-            VALUE "CompanyShortName", "Blue Panda Tech"
+            VALUE "CompanyShortName", "BluePandaTech"
             VALUE "ProductShortName", "Secure WordVault"
             VALUE "Official Build", "0"
         }
